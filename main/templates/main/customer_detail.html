@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content-title %}
+    <h2>{{ title }}</h2>
+{% endblock %}
+{% block main-content %}
+<div class="row">
+    <div class="card text-left col-md-6">
+        <div class="card-header bg-primary text-white"> Id: {{ customer.customer_id }} </div>
+        <div class="card-body bg-info text-white">First Name: {{ customer.first_name }} <br>
+                                Last Name: {{ customer.last_name }} </div>
+        <div class="card-footer bg-info text-white">Address: {{ customer.address }} </div>
+        <div class="card-footer bg-info text-white">Contact No: {{ customer.contact_no }}</div>
+        <!-- Only if customer has email -->
+        <div class="card-footer bg-info text-white">{% if customer.email_address %}Email Address: {{ customer.email_address }} {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

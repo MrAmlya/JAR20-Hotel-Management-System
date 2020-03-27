@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block content-title %}
+    <h2>{{ title }}</h2>
+{% endblock %}
+{% block main-content %}
+    {% if room_list %}
+        <table class="table table-hover">
+            <thead class="thead-light">
+            <tr>
+                <th>Room No</th>
+                <th>Room Type</th>
+                <th>Room Price</th>
+                <th>Availability</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for room in room_list %}
+                <tr>
+                    <td><a href="{% url 'room-detail' room.room_no %}"> {{ room.room_no }}</a></td>
+                    <td>{{ room.room_type.name }}</td>
+                    <td>{{ room.room_type.price }}</td>
+                    <td>{% if room.availability %}
+                        <span class="fa fa-check-circle" aria-hidden="true"> Available</span> {% else %}
+                        <span class="fa fa-times-circle" aria-hidden="true"> Not Available</span>{% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <p>Filter By: <a href="{% url 'rooms' %}?filter={% if filter == 'all' %}avail{% else %}all{% endif %}">
+            {% if filter == 'all' %}Available{% else %}All{% endif %}</a></p>
+    {% else %}
+        <p>There are no rooms.</p>
+    {% endif %}
+{% endblock %}
+

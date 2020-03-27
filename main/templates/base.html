@@ -1,0 +1,239 @@
+{% load i18n %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="This is internal hotel management system">
+    <meta name="author" content="Software Engineers' Group">
+    <!-- <link rel="icon" href="../../../../favicon.ico"> -->
+    <!-- Title -------------- -->
+    <hr>
+    <title>{{ title }}</title>
+    <!-- --------------------- -->   
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            crossorigin="anonymous"></script>
+    <!-- --------------Custom styles-------------------------------- -->
+    {% load static %}
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/styles.css' %}" rel="stylesheet">
+    <link href="{% static 'css/paper-dashboard.min790f.css' %}" rel="stylesheet">
+
+    <!-- ----------------------------------------------------------- -->
+</head>
+
+<body>
+<!-- --------------------------Header ----------------------------------- -->
+<header>
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+        <!-- --------------Navigation Bar--------------------- -->
+        <a class="navbar-brand" href="{% url 'index' %}">
+            <img src="{% static '/img/hotel-fav-icon.png' %}" style="width:50px; height=50px; padding:5px;">JARVIS ~ Hotel Management System</a>
+        <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse"
+                data-target="#top_navbar" aria-controls="top_navbar" aria-expanded="false"
+                aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <!-- ------------------------------------------------------------- -->
+        <div class="collapse navbar-collapse justify-content-end" id="top_navbar">
+            <ul class="navbar-nav">
+                <!-- -------------------Navigation Items--------------- -->
+                {% block navbar-items %}
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'profile' %}">Profile</a>
+                        </li>
+                    {% endif %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Help</a>
+                    </li>
+                {% endblock %}
+                <!-- ----------------------------------------------------- -->
+            </ul>
+        </div>
+    </nav>  
+    
+</header>
+<!-- ------------------------------------------------------------------- -->
+<div class="container-fluid" >
+    <div class="row">
+        {% block sidebar %}
+            <!-- ---------------------Sidebar Navigation------------------------- -->
+            <nav class="col-sm-3 col-md-2 d-none d-sm-block bg-light sidebar">
+                <!-- --------------Sidebar Items------------------ -->
+                {% block sidebar-items %}
+                    <br>
+                    <br>
+                    <ul class="nav nav-pills flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'index' %}"><i class="nc-icon nc-bank text-danger"></i>Dashboard</a>
+                        </li>
+                    </ul>
+                    <ul class="nav nav-pills flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'guest-list' %}"><i class="nc-icon nc-single-02 text-danger"></i>Guests</a>
+                        </li>
+                    </ul>
+                    <ul class="nav nav-pills flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'rooms' %}"><i class="nc-icon nc-layout-11 text-danger"></i>Rooms</a>
+                        </li>
+                    </ul>
+                    <ul class="nav nav-pills flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'payment-index' %}"><i class="nc-icon nc-money-coins text-danger"></i>Payments</a>
+                        </li>
+                    </ul>
+                    {% if user.is_authenticated %}
+                    <ul class="nav nav-pills flex-column">
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'reserve' %}"><i class="nc-icon nc-single-copy-04 text-danger"></i>Reserve</a>
+                            </li>
+                        </ul>
+                        <ul class="nav nav-pills flex-column">
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'reservations' %}"><i class="nc-icon nc-book-bookmark text-danger"></i>Reservations</a>
+                            </li>
+                        </ul>
+                        <ul class="nav nav-pills flex-column">
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'check_in-list' %}"><i class="nc-icon nc-key-25 text-danger"></i>Check-ins</a>
+                            </li>
+                        </ul>
+                        <ul class="nav nav-pills flex-column">
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'check_out-list' %}"><i class="nc-icon nc-lock-circle-open text-danger"></i>Check-outs</a>
+                            </li>
+                        </ul>
+                    {% endif %}
+                    <ul class="nav nav-pills flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#"><i class="nc-icon nc-paper text-danger"></i>Customer Feedback</a>
+                        </li>
+                    </ul>
+                    <ul class="nav nav-pills flex-column">
+                        {% block login-status %}
+                            {% if user.is_authenticated %}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#"><i class="nc-icon nc-circle-10 text-danger"></i>{{ user.first_name }} {{ user.last_name }}</a>
+                                    <a class="nav-link" href="{% url 'logout' %}?next={{ request.path }}"><i class="nc-icon nc-settings-gear-65 text-danger"></i>Logout</a>
+                                </li>
+                            {% else %}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'login' %}?next={{ request.path }}"><i class="nc-icon nc-tap-01 text-danger"></i>Login</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'signup' %}?next={{ request.path }}"><i class="nc-icon nc-touch-id text-danger"></i>Don't have an
+                                        account?</a>
+                                </li>
+                            {% endif %}
+                        {% endblock %}
+                    </ul>
+                {% endblock %}
+                <!-- ---------------------------------------------------------------- -->
+            </nav>
+        {% endblock %}
+        <!-- ---------------------------------------------------------------------------- -->
+
+        <!-- -------------------------Main Body Content---------------------- -->
+        <main role="main" class="col-sm-9 ml-sm-auto col-md-10 pt-3"
+              style="background: linear-gradient(to right, rgb(255, 255, 255), rgb(255, 255, 255))">
+            <!-- ---------Content Heading----------- -->
+            {% block content-title %}
+                <h1>{{ title }}</h1>
+            {% endblock %}
+            <!-- ------------------------------------ -->
+
+            <!-- Content for the heading previously mentioned -->
+            {% block main-content %}
+                <section class="row text-center placeholders">
+                </section>
+            {% endblock %}
+            <!-- --------------------------------------------------- -->
+
+            <!-- --------------Paginator--------------- -->
+            {% block pagination %}
+                <!-- Only shows paginator if the page is paginated -->
+                {% if is_paginated %}
+                    <nav aria-label="Page Navigation">
+                        <ul class="pagination">
+                            <!-- Only shows previous button when it has previous -->
+                            {% if page_obj.has_previous %}
+                                <!-- Code for previous page -->
+                                <!-- {{ page_obj.previous_page_number }} is previous page number. -->
+                                <li class="page-item"><a class="page-link"
+                                                         href="{{ request.path }}?page={{ page_obj.previous_page_number }}">Previous</a>
+                                </li>
+                            {% endif %}
+                            <!-- Pagination Numbers -->
+                            {% for page_no in page_obj.paginator.page_range %}
+                                <li class="page-item {% if page_no == page_obj.number %} active {% endif %}"><a
+                                        class="page-link"
+                                        href="{{ request.path }}?page={{ page_no }}">{{ page_no }}</a></li>
+                            {% endfor %}
+                            <!-- ------------------ --->
+                            <!-- Only shows next button if it has next page -->
+                            {% if page_obj.has_next %}
+                                <!-- {{ page_obj.next_page_number }} is next page. -->
+                                <li class="page-item"><a class="page-link"
+                                                         href="{{ request.path }}?page={{ page_obj.next_page_number }}">Next</a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                {% endif %}
+                <!-- --------------------------------------------------------- -->
+            {% endblock %}
+        </main>
+        <!-- -------------------------------------------------------------------------------------->
+    </div>
+</div>
+<footer class="footer footer-black  footer-white ">
+    <div class="container-fluid">
+      <div class="row">
+        <nav class="footer-nav">
+          
+        </nav>
+        <div class="credits ml-auto">
+          <span class="copyright">
+            ©
+            <script>
+              document.write(new Date().getFullYear())
+            </script>, made with <i class="fa fa-heart heart"></i> by MrAmlya
+          </span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js"
+        integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4"
+        crossorigin="anonymous"></script>
+<script src="https://use.fontawesome.com/c76346d885.js"></script>
+{% load static %}
+<script src="{% static 'js/script.js' %}"></script>
+{% block media-files %}
+{% endblock %}
+<script>
+    $(window).on("load", function () {
+        if ($("form")) {
+            $("input[type!='submit']").addClass("form-control");
+            $("input[type='submit']").addClass("btn btn-primary")
+        }
+    });
+</script>
+{% block additional-javascript %}
+{% endblock %}
+</body>
+</html>
