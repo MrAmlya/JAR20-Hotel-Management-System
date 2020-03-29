@@ -5,6 +5,7 @@
 * First activate the virtual environment:
 ```shell
 myvenv\Scripts\Activate
+```
 
 * The install requirements as:
 ```shell
