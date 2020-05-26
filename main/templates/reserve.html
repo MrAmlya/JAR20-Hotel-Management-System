@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load i18n %}
 {% block content-title %}
-    <h2 class="info-title">{{ title }}</h2>
+    <h2 class="h3 font-weight-400 mb-0 text-white">{{ title }}</h2><br>
 {% endblock %}
 {% block main-content %}
     <form action="" method="post">
@@ -103,15 +103,17 @@
                         {{ reservation_form.rooms.errors }}
                         {{ reservation_form.rooms }}  
                   </div>
+                  <input type="text" class="form-control" data-toggle="datetime" placeholder="Select date and time">
+
                     <div class="form-row align-items-center">
                         <div class="form-group col-auto">
                             {{ reservation_form.expected_arrival_date_time.errors }}
-                            <label for="{{ reservation_form.expected_arrival_date_time.id_for_label }}">Expected
+                            <label for="{{ reservation_form.expected_arrival_date_time.id_for_label }}"><br>Expected
                                 Arrival: </label>{{ reservation_form.expected_arrival_date_time }}
                         </div>
                         <div class="form-group col-auto">
                             {{ reservation_form.expected_departure_date_time.errors }}
-                            <label for="{{ reservation_form.expected_departure_date_time.id_for_label }}">Expected
+                            <label for="{{ reservation_form.expected_departure_date_time.id_for_label }}"><br>Expected
                                 Departure: </label>{{ reservation_form.expected_departure_date_time }}
                         </div>
                     </div>
@@ -124,36 +126,13 @@
     <form action="" method="post">
         {% csrf_token %}
         {{ reservation_form.as_p }}
-        <input type="submit" value="Confirm Reservation"/>
+        <input type="submit" class="btn btn-info" value="Confirm Reservation"/>
     </form>
     {% endcomment %}
 {% endblock %}
 
 {% block media-files %}
     {% load static %}
-
-    <link rel="stylesheet" type="text/css"
-          href="{% static 'css/forms.css' %} "/>
-
-    <link rel="stylesheet" type="text/css"
-          href="{% static 'css/widgets.css' %}"/>
-
-    <script type="text/javascript"
-            src="{% static 'js/jsi18n.js' %}"></script>
-    <script type="text/javascript"
-            src="{% static 'js/core.js' %}"></script>
-    <script type="text/javascript"
-            src="{% static 'js/RelatedObjectLookups.js' %}"></script>
-    <script type="text/javascript"
-            src="{% static '/js/jquery.js' %}"></script>
-    <script type="text/javascript"
-            src="{% static 'js/jquery.init.js' %}"></script>
-    <script type="text/javascript"
-            src="{% static 'js/actions.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/SelectBox.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/SelectFilter2.js' %}"></script>
-    <script type="text/javascript"
-            src="{% static 'js/calendar.js' %}"></script>
-    <script type="text/javascript"
-            src="{% static 'js/DateTimeShortcuts.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'libs/flatpickr/dist/flatpickr.min.css' %}">
+    <script src="{% static 'libs/flatpickr/dist/flatpickr.min.js' %}"></script>
 {% endblock %}

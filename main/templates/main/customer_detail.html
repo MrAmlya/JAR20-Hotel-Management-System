@@ -1,18 +1,48 @@
 {% extends 'base.html' %}
 {% block content-title %}
-    <h2>{{ title }}</h2>
+    <h2 class="h3 font-weight-400 mb-0 text-white">{{ title }}</h2>
+    <br>
 {% endblock %}
 {% block main-content %}
-<div class="row">
-    <div class="card text-left col-md-6">
-        <div class="card-header bg-primary text-white"> Id: {{ customer.customer_id }} </div>
-        <div class="card-body bg-info text-white">First Name: {{ customer.first_name }} <br>
-                                Last Name: {{ customer.last_name }} </div>
-        <div class="card-footer bg-info text-white">Address: {{ customer.address }} </div>
-        <div class="card-footer bg-info text-white">Contact No: {{ customer.contact_no }}</div>
-        <!-- Only if customer has email -->
-        <div class="card-footer bg-info text-white">{% if customer.email_address %}Email Address: {{ customer.email_address }} {% endif %}
+<div class="card card-fluid">
+    <div class="card-header">
+      <div class="row align-items-center">
+        <div class="col-auto">
+          <!-- Avatar -->
+          <div class="avatar-parent-child">
+            <div class="icon bg-gradient-info text-white rounded-circle icon-shape">
+                <i class="far fa-award"></i>
+            </div>
+            <span class="avatar-child avatar-badge bg-success"></span>
+          </div>
         </div>
+        <div class="col ml-md-n2">
+          <a href="#!" class="d-block h6 mb-0">{{ customer.first_name }} {{ customer.last_name }}</a>
+          <small class="d-block text-muted">{{ customer.customer_id }}</small>
+        </div>
+
+      </div>
+      <hr>
+      Id: {{ customer.customer_id }}<br>
+      First Name: {{ customer.first_name }} <br>
+      Last Name: {{ customer.last_name }}<br>
+      Address: {{ customer.address }} <br>
+      Contact No: {{ customer.contact_no }}<br>
+      Email Address: {{ customer.email_address }}<br>
+
     </div>
-</div>
+    
+    <div class="card-footer">
+      <div class="row align-items-center">
+        <div class="col-6">
+          <button type="button" class="btn btn-sm px-0 font-weight-bold btn-link text-primary btn-icon">
+            
+          </button>
+        </div>
+        <div class="col-6 text-right">
+        </div>
+      </div>
+    </div>
+  </div>
+
 {% endblock %}

@@ -1,25 +1,43 @@
 {% extends "base.html" %}
 {% block content-title %}
-    <h2>{{ title }}</h2>
+    <h2 class="h3 font-weight-400 mb-0 text-white">{{ title }}</h2>
+    <br>
 {% endblock %}
 {% block main-content %}
     {% if guest_list %}
-        <table class="table table-hover">
-            <thead class="thead-light">
-            <tr>
-                <th>Customer ID</th>
-                <th>Customer Name</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for guest in guest_list %}
+    <div class="card">
+        <div class="table-responsive">
+            <table class="table align-items-center">
+                <thead>
                 <tr>
-                    <td><a href="{% url 'customer-detail' guest.customer_id %}"> {{ guest.customer_id }}</a></td>
-                    <td>{{ guest.first_name }} {{ guest.middle_name }} {{ guest.last_name }}</td>
+                    <th></th>
+                    <th>Customer ID</th>
+                    <th>Customer Name</th>
+                    <th></th>
                 </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                {% for guest in guest_list %}
+                    <tr>
+                        <td>
+                            <div class="avatar-parent-child">
+                                <div class="icon bg-gradient-info text-white rounded-circle icon-shape">
+                                    <i class="far fa-award"></i>
+                                </div>
+                                <span class="avatar-child avatar-badge bg-success"></span>
+                              </div>
+                        </td>
+                        <td><a href="{% url 'customer-detail' guest.customer_id %}"> {{ guest.customer_id }}</a></td>
+                        <td>{{ guest.first_name }} {{ guest.middle_name }} {{ guest.last_name }}</td>
+                        
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+    </div>
+        
     {% else %}
         <p>There are no guests.</p>
     {% endif %}

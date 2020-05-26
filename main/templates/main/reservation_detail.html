@@ -1,28 +1,65 @@
 {% extends 'base.html' %}
 {% block content-title %}
-    <h2>Reservation No. {{ reservation.reservation_id }} Details</h2>
+    <h2 class="h3 font-weight-400 mb-0 text-white">Reservation No. {{ reservation.reservation_id }} Details</h2><br>
 {% endblock %}
 {% block main-content %}
-    <div class="row">
-        <div class="card text-left col-md-6">
-            <div class="card-header bg-primary text-white">Customer: <a href="{% url 'customer-detail' reservation.customer_id %}" class="text-white">{{ reservation.customer }}</a>  </div>
-            <div class="card-body bg-info text-white">Staff: <a href="{% url 'staff-detail' reservation.staff_id %}" class="text-white">{{ reservation.staff }}</a><br>
-                             </div>
-            <div class="card-footer bg-info text-white">No of Children: {{ reservation.no_of_children }}</div>
-            <div class="card-footer bg-info text-white"> No of Adults: {{ reservation.no_of_adults }}</div>
-            <div class="card-footer bg-info text-white">Reservation Date: {{ reservation.reservation_date_time }}</div>
-            <div class="card-footer bg-info text-white">  Expected Arrival: {{ reservation.expected_arrival_date_time }}</div>
-            <div class="card-footer bg-info text-white"> Expected Departure: {{ reservation.expected_departure_date_time }}</div>
-            <div class="card-footer bg-info text-white">{% if reservation.room_set.all %}
-             Reserved Rooms:
+<div class="card card-fluid">
+    <div class="card-header">
+      <div class="row align-items-center">
+        <div class="col-auto">
+          <!-- Avatar -->
+          <div class="avatar-parent-child">
+            <div class="icon bg-gradient-info text-white rounded-circle icon-shape">
+                <i class="far fa-award"></i>
+            </div>
+            <span class="avatar-child avatar-badge bg-success"></span>
+          </div>
+        </div>
+        <div class="col ml-md-n2">
+          <a href="#!" class="d-block h6 mb-0">{{ reservation.customer }}</a>
+          <small class="d-block text-muted">{{ reservation.reservation_date_time }}</small>
+        </div>
+        <div class="col-auto">
+          <button type="button" class="btn btn-xs btn-primary btn-icon rounded-pill">
+            <span class="btn-inner--icon"><i class="far fa-edit"></i></span>
+            <span class="btn-inner--text">Edit</span>
+          </button>
+        </div>
+      </div>
+      <hr>
+    Customer: <a href="{% url 'customer-detail' reservation.customer_id %}">{{ reservation.customer }}</a><br>
+    Staff: <a href="{% url 'staff-detail' reservation.staff_id %}" >{{ reservation.staff }}</a><br>
+    No of Children: {{ reservation.no_of_children }} <br>
+    No of Adults: {{ reservation.no_of_adults }}<br>
+    Reservation Date: {{ reservation.reservation_date_time }}<br>
+    Expected Arrival: {{ reservation.expected_arrival_date_time }}<br>
+    Expected Departure: {{ reservation.expected_departure_date_time }}<br>
+    {% if reservation.room_set.all %}
+    Reserved Rooms:
                 {% for room in reservation.room_set.all %}
-                <strong><a href="{% url 'room-detail' room.room_no %}" class="text-white">{{ room }}</a>{% if not forloop.last %}
+                <strong><a href="{% url 'room-detail' room.room_no %}">{{ room }}</a>{% if not forloop.last %}
                 , {% endif %}</strong>
             {% endfor %}
             {% endif %}
-            </div>
-        </div>
+      
     </div>
+    
+    <div class="card-footer">
+      <div class="row align-items-center">
+        <div class="col-6">
+          <button type="button" class="btn btn-sm px-0 font-weight-bold btn-link text-primary btn-icon">
+            
+          </button>
+        </div>
+        <div class="col-6 text-right">
+        </div>
+      </div>
+    </div>
+  </div>
+
+    
+
+    
 
 
 {% endblock %}

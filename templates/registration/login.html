@@ -1,10 +1,21 @@
 {% extends 'base.html' %}
 {% block content-title %}
-    <h1>Login</h1>
 {% endblock %}
 {% block login-status %}
 {% endblock %}
 {% block main-content %}
+<div class="page-content">
+    <div class="min-vh-80 py-5 d-flex align-items-center">
+      <div class="w-100">
+        <div class="row justify-content-center">
+          <div class="col-sm-8 col-lg-6">
+            <div class="card shadow zindex-100 mb-0">
+              <div class="card-body px-md-6 py-6">
+                <div class="mb-4">
+                  <h6 class="h3">Login</h6>
+                </div>
+                <span class="clearfix"></span>
+                
     {% if form.errors %}
         <p class="notMatched">Username and password didn't match. Please Try Again.</p>
     {% endif %}
@@ -19,17 +30,31 @@
         {% csrf_token %}
         <div class="form-row align-items-center">
             <div class="form-group col-auto">
-                <label for="{{ form.username.id_for_label }}">Username</label>{{ form.username }}
+                <label for="{{ form.username.id_for_label }}">Username</label> &nbsp;&nbsp;&nbsp;&nbsp; {{ form.username }}
             </div>
             <div class="form-group col-auto">
-                <label for="{{ form.password.id_for_label }}">Password</label>{{ form.password }}
+                <label for="{{ form.password.id_for_label }}">Password</label> &nbsp;&nbsp;&nbsp;&nbsp; {{ form.password }}
             </div>
         </div>
-        <input type="submit" value="Login"/>
+        <div class="mt-4"><button type="submit" class="btn btn-sm btn-primary btn-icon rounded-pill">
+            <span class="btn-inner--text">Login</span>
+            <span class="btn-inner--icon"><i class="far fa-long-arrow-alt-right"></i></span>
+          </button></div>
         <input type="hidden" name="next" value="{{ next }}"/>
     </form>
 
     {# Assumes you setup the password_reset view in your URLconf #}
     <p><a href="{% url 'password_reset' %}">Lost password?</a></p>
 
+                
+              </div>
+              <div class="card-footer px-md-5"><small>Not registered?</small>
+                <a href="#" class="small font-weight-bold">Create account</a></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+    
 {% endblock %}

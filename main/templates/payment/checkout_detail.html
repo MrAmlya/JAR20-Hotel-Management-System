@@ -4,14 +4,55 @@
 {% endblock %}
 <!-- TODO Work on FrontEnd -->
 {% block main-content %}
-    Check-In:
-    <a href="{% url 'check_in-detail' checkout.check_in.id %}">{{ checkout.check_in }}</a> <br/>
-    Stay Duration: {{ checkout.stay_duration }}<br/>
-    Total Amount: {{ checkout.total_amount }}<br/>
-    Pay Amount: {{ checkout.pay_amount }} <br/>
-    Check-Out Date Time = {{ checkout.check_out_date_time }}<br/>
-    Checked Out by:
-    {% if staff.count == 0 %} {{ checkout.user }}{% else %}
-        <a href="{% url 'staff-detail' staff.staff_id %}">{{ staff }}</a>
-    {% endif %}
+<div class="card card-fluid">
+    <div class="card-header">
+      <div class="row align-items-center">
+        <div class="col-auto">
+          <!-- Avatar -->
+          <div class="avatar-parent-child">
+            <div class="icon bg-gradient-info text-white rounded-circle icon-shape">
+                <i class="far fa-award"></i>
+            </div>
+            <span class="avatar-child avatar-badge bg-success"></span>
+          </div>
+        </div>
+        <div class="col ml-md-n2">
+          <a href="#!" class="d-block h6 mb-0">{{ checkout.check_in }}</a>
+          <small class="d-block text-muted"> {{ checkout.check_out_date_time }}</small>
+        </div>
+        <div class="col-auto">
+          <button type="button" class="btn btn-xs btn-primary btn-icon rounded-pill">
+            <span class="btn-inner--icon"><i class="far fa-edit"></i></span>
+            <span class="btn-inner--text">Edit</span>
+          </button>
+        </div>
+      </div>
+      <hr>
+      Check-In:
+      <a href="{% url 'check_in-detail' checkout.check_in.id %}">{{ checkout.check_in }}</a> <br/>
+      Stay Duration: {{ checkout.stay_duration }}<br/>
+      Total Amount: {{ checkout.total_amount }}<br/>
+      Pay Amount: {{ checkout.pay_amount }} <br/>
+      Check-Out Date Time = {{ checkout.check_out_date_time }}<br/>
+      Checked Out by:
+      {% if staff.count == 0 %} {{ checkout.user }}{% else %}
+          <a href="{% url 'staff-detail' staff.staff_id %}">{{ staff }}</a>
+      {% endif %}
+
+    </div>
+    
+    <div class="card-footer">
+      <div class="row align-items-center">
+        <div class="col-6">
+          <button type="button" class="btn btn-sm px-0 font-weight-bold btn-link text-primary btn-icon">
+            
+          </button>
+        </div>
+        <div class="col-6 text-right">
+        </div>
+      </div>
+    </div>
+  </div>
+
+    
 {% endblock %}

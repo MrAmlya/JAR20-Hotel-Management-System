@@ -1,8 +1,9 @@
 {% extends 'base.html' %}
 {% block content-title %}
-    <h2>Reservation Successful</h2>
+    <h2 class="h3 font-weight-400 mb-0 text-white">Reservation Successful</h2><br>
 {% endblock %}
 {% block main-content %}
+<div class="card">
     <div class="container">
 
         <div class="card">
@@ -12,4 +13,6 @@
             <div class="card-footer bg.info">Reserved by: <a href="{% url 'staff-detail' reservation.staff.staff_id %}">{{ reservation.staff }}</a></div>
   </div>
 </div>
+</div>
+    
 {% endblock %}

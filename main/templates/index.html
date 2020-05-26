@@ -1,181 +1,177 @@
 {% extends 'base.html' %}
 {% block content-title %}
-    <h2 class="info-title">{{ title }}</h2>
+    <h2 class="h3 font-weight-400 mb-0 text-white">{{ title }}</h2>
+    <br>
 {% endblock %}
 <!-- ToDo Work on FrontEnd -->
 {% block main-content %}
     <div class="row">
-        <div class="col-lg-3 col-md-6 col-sm-6">
-            <div class="card card-stats">
-              <div class="card-body ">
-                <div class="row">
-                  <div class="col-5 col-md-4">
-                    <div class="icon-big text-center icon-warning">
-                      <i class="nc-icon nc-chart-pie-36 text-success"></i>
-                    </div>
-                  </div>
-                  <div class="col-7 col-md-8">
-                    <div class="numbers">
-                      <p class="card-category">Total Rooms</p>
-                      <p class="card-title">{{ total_num_rooms }}
-                        <p>
-                    </div>
-                  </div>
-                </div>
+      <div class="col-lg-4">
+        <!-- Profile storage -->
+        <div class="card card-fluid">
+          <div class="card-header">
+            <h6 class="mb-0">Total Rooms</h6>
+          </div>
+          <div class="card-body">
+            <div class="progress-circle progress-lg mx-auto" id="progress-circle-1" data-progress="100" data-text="{{ total_num_rooms }}" data-color="info">
+            </div>
+
+            <div class="d-flex my-4 px-5">
+              <div class="col">
+                <span class="badge badge-dot badge-lg h6">
+                  <i class="bg-success"></i>{{ available_num_rooms }}
+                </span>
+                <small class="d-block text-muted">Available</small>
               </div>
-              <div class="card-footer ">
-                <hr>
-                <div class="stats">
-                  <i class="fa fa-calendar-o"></i> Last day
-                </div>
+              <div class="col">
+                <span class="badge badge-dot badge-lg h6">
+                  <i class="bg-warning"></i>{{ total_num_reservations }}
+                </span>
+                <small class="d-block text-muted">Reserved</small>
               </div>
             </div>
+           
           </div>
-
-          <div class="col-lg-3 col-md-6 col-sm-6">
-            <div class="card card-stats">
-              <div class="card-body ">
-                <div class="row">
-                  <div class="col-5 col-md-4">
-                    <div class="icon-big text-center icon-warning">
-                      <i class="nc-icon nc-bag-16 text-success"></i>
-                    </div>
-                  </div>
-                  <div class="col-7 col-md-8">
-                    <div class="numbers">
-                      <p class="card-category">Available Rooms</p>
-                      <p class="card-title">{{ available_num_rooms }}
-                        <p>
-                    </div>
-                  </div>
-                </div>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <!-- Profile storage -->
+        <div class="card card-fluid">
+          <div class="card-header">
+            <h6 class="mb-0">Available Rooms</h6>
+          </div>
+          <div class="card-body">
+            <div class="progress-circle progress-lg mx-auto" id="progress-circle-1" data-progress="80" data-text="{{ available_num_rooms }}" data-color="primary">
+              <script>
+                num1 = 20;
+                num2 = 1;
+                result = 100-((num2/num1)*100) ;
+              </script>
+            </div>
+            <div class="d-flex my-4 px-5">
+              <div class="col">
+                <span class="badge badge-dot badge-lg h6">
+                  <i class="bg-success"></i>{{ total_num_rooms }}
+                </span>
+                <small class="d-block text-muted">Total Rooms</small>
               </div>
-              <div class="card-footer ">
-                <hr>
-                <div class="stats">
-                  <i class="fa fa-calendar-o"></i> Last day
-                </div>
+              <div class="col">
+                <span class="badge badge-dot badge-lg h6">
+                  <i class="bg-warning"></i>{{ total_num_reservations }}
+                </span>
+                <small class="d-block text-muted">Reserved</small>
               </div>
             </div>
+            
           </div>
-
-          <div class="col-lg-3 col-md-6 col-sm-6">
-            <div class="card card-stats">
-              <div class="card-body ">
-                <div class="row">
-                  <div class="col-5 col-md-4">
-                    <div class="icon-big text-center icon-warning">
-                      <i class="nc-icon nc-touch-id text-success"></i>
-                    </div>
-                  </div>
-                  <div class="col-7 col-md-8">
-                    <div class="numbers">
-                      <p class="card-category">Total Reservations</p>
-                      <p class="card-title">{{ total_num_reservations }}
-                        <p>
-                    </div>
-                  </div>
-                </div>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <!-- Profile storage -->
+        <div class="card card-fluid">
+          <div class="card-header">
+            <h6 class="mb-0">Total Reservations</h6>
+          </div>
+          <div class="card-body">
+            <div class="progress-circle progress-lg mx-auto" id="progress-circle-1" data-progress="60" data-text="{{ total_num_reservations }}" data-color="success">
+            </div>
+            <div class="d-flex my-4 px-5">
+              <div class="col">
+                <span class="badge badge-dot badge-lg h6">
+                  <i class="bg-success"></i>{{ total_num_customers }}
+                </span>
+                <small class="d-block text-muted">Total Customers</small>
               </div>
-              <div class="card-footer ">
-                <hr>
-                <div class="stats">
-                  <i class="fa fa-calendar-o"></i> Last day
-                </div>
+              <div class="col">
+                <span class="badge badge-dot badge-lg h6">
+                  <i class="bg-warning"></i>{{ total_num_staffs }}
+                </span>
+                <small class="d-block text-muted">Total Staff</small>
               </div>
             </div>
+    
           </div>
-
-          <div class="col-lg-3 col-md-6 col-sm-6">
-            <div class="card card-stats">
-              <div class="card-body ">
-                <div class="row">
-                  <div class="col-5 col-md-4">
-                    <div class="icon-big text-center icon-warning">
-                      <i class="nc-icon nc-tie-bow text-success"></i>
-                    </div>
-                  </div>
-                  <div class="col-7 col-md-8">
-                    <div class="numbers">
-                      <p class="card-category">Total Staffs</p>
-                      <p class="card-title">{{ total_num_staffs }}
-                        <p>
-                    </div>
-                  </div>
-                </div>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <!-- Profile storage -->
+        <div class="card card-fluid">
+          <div class="card-header">
+            <h6 class="mb-0">Total Staff</h6>
+          </div>
+          <div class="card-body">
+            <div class="progress-circle progress-lg mx-auto" id="progress-circle-1" data-progress="40" data-text="{{ total_num_staffs }}" data-color="warning"></div>
+            <div class="d-flex my-4 px-5">
+              <div class="col">
+                <span class="badge badge-dot badge-lg h6">
+                  <i class="bg-success"></i>{{ total_num_staffs }}
+                </span>
+                <small class="d-block text-muted">Present</small>
               </div>
-              <div class="card-footer ">
-                <hr>
-                <div class="stats">
-                  <i class="fa fa-calendar-o"></i> Last day
-                </div>
+              <div class="col">
+                <span class="badge badge-dot badge-lg h6">
+                  <i class="bg-warning"></i>0
+                </span>
+                <small class="d-block text-muted">Not Available</small>
               </div>
             </div>
+           
           </div>
-
-          <div class="col-lg-3 col-md-6 col-sm-6">
-            <div class="card card-stats">
-              <div class="card-body ">
-                <div class="row">
-                  <div class="col-5 col-md-4">
-                    <div class="icon-big text-center icon-warning">
-                      <i class="nc-icon nc-single-02 text-success"></i>
-                    </div>
-                  </div>
-                  <div class="col-7 col-md-8">
-                    <div class="numbers">
-                      <p class="card-category">Total Customers</p>
-                      <p class="card-title">{{ total_num_customers }}
-                        <p>
-                    </div>
-                  </div>
-                </div>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <!-- Profile storage -->
+        <div class="card card-fluid">
+          <div class="card-header">
+            <h6 class="mb-0">Total Customers</h6>
+          </div>
+          <div class="card-body">
+            <div class="progress-circle progress-lg mx-auto" id="progress-circle-1" data-progress="64" data-text="{{ total_num_customers }}" data-color="dark"></div>
+            <div class="d-flex my-4 px-5">
+              <div class="col">
+                <span class="badge badge-dot badge-lg h6">
+                  <i class="bg-success"></i>{{ total_num_customers }}
+                </span>
+                <small class="d-block text-muted">Total customers </small>
               </div>
-              <div class="card-footer ">
-                <hr>
-                <div class="stats">
-                  <i class="fa fa-calendar-o"></i> Last day
-                </div>
+              <div class="col">
+                <span class="badge badge-dot badge-lg h6">
+                  <i class="bg-warning"></i>{{ total_num_customers }}
+                </span>
+                <small class="d-block text-muted">Happy customers</small>
               </div>
             </div>
+           
           </div>
-
-          {% if user.is_authenticated %}
-          <div class="col-lg-3 col-md-6 col-sm-6">
-            <div class="card card-stats">
-              <div class="card-body ">
-                <div class="row">
-                  <div class="col-5 col-md-4">
-                    <div class="icon-big text-center icon-warning">
-                      <i class="nc-icon nc-single-02 text-success"></i>
-                    </div>
-                  </div>
-                  <div class="col-7 col-md-8">
-                    <div class="stats">
-                      <p class="card-category">Last Reservation:</p>
-                      {% if last_reserved_by.reservation_id %}
+        </div>
+      </div>
+      {% if user.is_authenticated %}
+      <div class="col-lg-4">
+        <!-- Profile storage -->
+        <div class="card card-fluid">
+          <div class="card-header">
+            <h6 class="mb-0">Last Reservation</h6>
+          </div>
+          <div class="card-body">
+            <div class="">
+              {% if last_reserved_by.reservation_id %}
                       <p class="">Reservation for:<a
                         href="{% url 'customer-detail' last_reserved_by.customer.customer_id %}" class=>{{ last_reserved_by.customer }}</a>
                         <p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="card-footer ">
-                <hr>
-                <div class="stats">
-                  Reserved By:
+                          Reserved By:
                             {% if perms.main.can_view_staff_detail %}
                                 <a href="{% url 'staff-detail' last_reserved_by.staff.staff_id %}">{{ last_reserved_by.staff }}</a>
                                 {% else %}{{ last_reserved_by.staff }}
                             {% endif %}
-                </div>
-                {% else %}
+                              </div>
+                            {% else %}
                         <div class="card-body bg-dark text-white">Not Yet</div>
                     {% endif %}
-              </div>
             </div>
-            {% endif %}
+           
           </div>
-    </div>
+        </div>
+      </div>
+      {% endif %}
+      
 {% endblock %}

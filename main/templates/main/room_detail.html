@@ -1,27 +1,53 @@
 {% extends 'base.html' %}
 {% block content-title %}
-    <h2>{{ title }}</h2>
+<h2 class="h3 font-weight-400 mb-0 text-white">{{ title }}</h2><br>
 {% endblock %}
 <!-- TODO Work on FrontEnd -->
 {% block main-content %}
-    <div class="row">
-        <div class="card text-left col-md-6">
-
-            <div class="card-header text-center">
-                <!-- Room Photo -->
-                {% load static %}
-                <img src="#" alt="Room" style="width:200px; height:200px;">
+<div class="card card-fluid">
+    <div class="card-header">
+      <div class="row align-items-center">
+        <div class="col-auto">
+          <!-- Avatar -->
+          <div class="avatar-parent-child">
+            <div class="icon bg-gradient-info text-white rounded-circle icon-shape">
+                <i class="far fa-award"></i>
             </div>
-            <div class="card-header bg-info text-white">Room No: {{ room.room_no }}</div>
-            <div class="card-body bg-info text-white">Room Type: {{ room.get_room_type_display }}</div>
-            <div class="card-footer bg-info text-white">Availability : {% if room.availability %} Yes {% else %} No {% endif %}</div>
-            <div class="card-footer bg-info text-white">  Facilities: {{ room.display_facility }} </div>
-
-            <div class="card-footer bg-info text-white">
-                {% if room.reservation %}
-                    Reservation:
-                    <a href="{% url 'reservation-detail' room.reservation_id %}"class="text-white">{{ room.reservation }} </a><br/>
-                {% endif %}
-            </div>
+            <span class="avatar-child avatar-badge bg-success"></span>
+          </div>
         </div>
+        <div class="col ml-md-n2">
+          <a href="#!" class="d-block h6 mb-0">{{ room.room_no }}</a>
+          <small class="d-block text-muted">{{ room.get_room_type_display }}</small>
+        </div>
+        <div class="col-auto">
+          <button type="button" class="btn btn-xs btn-primary btn-icon rounded-pill">
+            <span class="btn-inner--icon"><i class="far fa-edit"></i></span>
+            <span class="btn-inner--text">Edit</span>
+          </button>
+        </div>
+      </div>
+      <hr>
+      Room No: {{ room.room_no }}<br/>
+      Room Type: {{ room.get_room_type_display }}<br>
+      Availability : {% if room.availability %} Yes {% else %} No {% endif %}<br>
+      Facilities: {{ room.display_facility }}<br>
+      Reservation: {{ room.reservation }}
+
+    </div>
+    
+    <div class="card-footer">
+      <div class="row align-items-center">
+        <div class="col-6">
+          <button type="button" class="btn btn-sm px-0 font-weight-bold btn-link text-primary btn-icon">
+            
+          </button>
+        </div>
+        <div class="col-6 text-right">
+        </div>
+      </div>
+    </div>
+  </div>
+
+    
 {% endblock %}

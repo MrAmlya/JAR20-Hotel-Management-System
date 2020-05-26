@@ -1,8 +1,11 @@
 {% extends 'base.html' %}
 {% block content-title %}
-    <h1>Logged Out</h1>
+    <h1 class="h3 font-weight-400 mb-0 text-white">Logged Out</h1> <br>
 {% endblock %}
 
 {% block main-content %}
+<div class="card">
     <a href="{% url 'login' %}">Click here to login again.</a>
+</div>
+    
 {% endblock %}

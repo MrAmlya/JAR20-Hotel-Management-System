@@ -258,13 +258,21 @@ class ReservationForm(forms.Form):
     )
     expected_arrival_date_time = forms.SplitDateTimeField(
         widget=MySplitDateTime(
+           
         )
     )
 
     expected_departure_date_time = forms.SplitDateTimeField(
         widget=MySplitDateTime(
+            
         )
     )
+
+
+    def decompress(self, value):
+        if value:
+            return [value.date(), value.time()]
+        return [None, None]
 
 
 class CheckInRequestForm(forms.ModelForm):

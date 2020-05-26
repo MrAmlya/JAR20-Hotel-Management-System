@@ -1,13 +1,16 @@
 {% extends 'base.html' %}
 <!--ToDo Work on Front end -->
 {% block content-title %}
-    <h2>{{ title }}</h2>
+    <h2 class="h3 font-weight-400 mb-0 text-white">{{ title }}</h2><br>
 {% endblock %}
 {% block main-content %}
     {% if checkin_list %}
+    
+    <div class="card">
         <form action="" method="post" id="checkout">{% csrf_token %}
             {{ form }}
         </form>
+        
         <table class="table table-hover">
             <thead>
             <tr>
@@ -84,5 +87,7 @@
             });
             */
         </script>
+    </div>
+        
     {% endblock %}
 {% endblock %}

@@ -1,14 +1,49 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content-title %}
-    <h2>Profile Information</h2>
+    <h2 class="h3 font-weight-400 mb-0 text-white">Profile Information</h2>
+    <br>
 {% endblock %}  
 
 {% block main-content %}
-    <img src="{{ MEDIA_URL }}{{ information.profile_picture }}"/><br/>
-    Username: {{ user_information.username }}<br/>
-    Name: {{ information.first_name }} {{ information.middle_name }} {{ information.last_name }}<br/>
-    Contact No: {{ information.contact_no }}<br/>
-    Email: {{ information.email_address }}<br/>
-    Address: {{ information.address }}<br/>
+<div class="card card-fluid">
+    <div class="card-header">
+      <div class="row align-items-center">
+        <div class="col-auto">
+          <!-- Avatar -->
+          <a href="#" class="avatar rounded-circle avatar-lg">
+            <img alt="Image placeholder" src="{{ MEDIA_URL }}{{ information.profile_picture }}" class="">
+          </a>
+        </div>
+        <div class="col ml-md-n2">
+          <a href="#!" class="d-block h6 mb-0">{{user.first_name}} {{user.last_name}}</a>
+          <small class="d-block text-muted">{{ user_information.username }}</small>
+        </div>
+        <div class="col-auto">
+          <button type="button" class="btn btn-xs btn-primary btn-icon rounded-pill">
+            <span class="btn-inner--icon"><i class="far fa-edit"></i></span>
+            <span class="btn-inner--text">Edit</span>
+          </button>
+        </div>
+      </div>
+      <hr>
+      Username: {{ user_information.username }}<br/>
+      Name: {{ information.first_name }} {{ information.middle_name }} {{ information.last_name }}<br/>
+      Contact No: {{ information.contact_no }}<br/>
+      Email: {{ information.email_address }}<br/>
+      Address: {{ information.address }}<br/>
+    </div>
+    
+    <div class="card-footer">
+      <div class="row align-items-center">
+        <div class="col-6">
+          <button type="button" class="btn btn-sm px-0 font-weight-bold btn-link text-primary btn-icon">
+            
+          </button>
+        </div>
+        <div class="col-6 text-right">
+        </div>
+      </div>
+    </div>
+  </div>
 {% endblock %}
