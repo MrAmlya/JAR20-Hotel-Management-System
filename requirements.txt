@@ -47,7 +47,7 @@ social-auth-app-django==3.1.0
 social-auth-core==3.1.0
 sqlparse==0.3.0
 touch==2019.4.13
-urllib3==1.24.1
+urllib3==1.24.2
 values==2019.4.13
 virtualenv==20.0.10
 Werkzeug==0.16.0
