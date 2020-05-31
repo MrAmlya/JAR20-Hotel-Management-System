@@ -7,6 +7,12 @@
     {% if checkin_list %}
     
     <div class="card">
+        <div class="col-auto">
+            <button type="button" class="btn btn-xs btn-primary btn-icon rounded-pill">
+              <span class="btn-inner--icon"><i class="far fa-edit"></i></span>
+              <span class="btn-inner--text" onclick="window.print();" >Print</span>
+            </button>
+          </div>
         <form action="" method="post" id="checkout">{% csrf_token %}
             {{ form }}
         </form>

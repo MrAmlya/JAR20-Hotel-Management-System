@@ -21,7 +21,12 @@
           <a href="#!" class="d-block h6 mb-0">{{ checkin.reservation }}</a>
           <small class="d-block text-muted">{{ checkin.check_in_date_time }}</small>
         </div>
-
+        <div class="col-auto">
+          <button type="button" class="btn btn-xs btn-primary btn-icon rounded-pill">
+            <span class="btn-inner--icon"><i class="far fa-edit"></i></span>
+            <span class="btn-inner--text" onclick="window.print();" >Print</span>
+          </button>
+        </div>
       </div>
       <hr>
     Reservation: <a href="{% url 'reservation-detail' checkin.reservation.reservation_id %}">{{ checkin.reservation }}</a>

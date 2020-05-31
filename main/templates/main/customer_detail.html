@@ -20,6 +20,12 @@
           <a href="#!" class="d-block h6 mb-0">{{ customer.first_name }} {{ customer.last_name }}</a>
           <small class="d-block text-muted">{{ customer.customer_id }}</small>
         </div>
+        <div class="col-auto">
+          <button type="button" class="btn btn-xs btn-primary btn-icon rounded-pill">
+            <span class="btn-inner--icon"><i class="far fa-edit"></i></span>
+            <span class="btn-inner--text" onclick="window.print();" >Print</span>
+          </button>
+        </div>
 
       </div>
       <hr>

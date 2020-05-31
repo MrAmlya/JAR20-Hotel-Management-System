@@ -100,11 +100,10 @@
                         <div class="col-md-12 pl-1">
                             <p><a href="{% url 'rooms' %}" target="_blank">Click here to know about rooms</a> </p>
                         </div>
-                        {{ reservation_form.rooms.errors }}
+                        {{ reservation_form.rooms.errors }}<br>
                         {{ reservation_form.rooms }}  
                   </div>
-                  <input type="text" class="form-control" data-toggle="datetime" placeholder="Select date and time">
-
+                  
                     <div class="form-row align-items-center">
                         <div class="form-group col-auto">
                             {{ reservation_form.expected_arrival_date_time.errors }}
@@ -117,7 +116,7 @@
                                 Departure: </label>{{ reservation_form.expected_departure_date_time }}
                         </div>
                     </div>
-                    <input type="submit" value="Confirm Reservation">
+                    <input type="submit" class="btn btn-success" value="Confirm Reservation">
               </div>
             </div>
           </div>
@@ -134,5 +133,9 @@
 {% block media-files %}
     {% load static %}
     <link rel="stylesheet" href="{% static 'libs/flatpickr/dist/flatpickr.min.css' %}">
-    <script src="{% static 'libs/flatpickr/dist/flatpickr.min.js' %}"></script>
+    <script src="{% static 'js/purpose.core.js' %}"></script>
+    <script src="{% static 'js/DateTimeShortcuts.js' %}"></script>
+    <script src="{% static 'js/jquery.js' %}"></script>
+    <script src="{% static 'js/jquery.init.js' %}"></script>
+    <script src="{% static 'js/calendar.js' %}"></script>
 {% endblock %}

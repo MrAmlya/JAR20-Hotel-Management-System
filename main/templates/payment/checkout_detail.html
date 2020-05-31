@@ -1,10 +1,11 @@
 {% extends 'base.html' %}
 {% block content-title %}
-    <h2>Check-Out No: {{ checkout.id }}</h2>
+    <h2 class="h3 font-weight-400 mb-0 text-white">Check-Out No: {{ checkout.id }}</h2> <br>
 {% endblock %}
 <!-- TODO Work on FrontEnd -->
 {% block main-content %}
-<div class="card card-fluid">
+
+<div class="card card-fluid printableArea">
     <div class="card-header">
       <div class="row align-items-center">
         <div class="col-auto">
@@ -23,7 +24,7 @@
         <div class="col-auto">
           <button type="button" class="btn btn-xs btn-primary btn-icon rounded-pill">
             <span class="btn-inner--icon"><i class="far fa-edit"></i></span>
-            <span class="btn-inner--text">Edit</span>
+            <span class="btn-inner--text" onclick="window.print();" >Print</span>
           </button>
         </div>
       </div>

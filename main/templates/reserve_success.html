@@ -5,6 +5,12 @@
 {% block main-content %}
 <div class="card">
     <div class="container">
+        <div class="col-auto">
+            <button type="button" class="btn btn-xs btn-primary btn-icon rounded-pill">
+              <span class="btn-inner--icon"><i class="far fa-edit"></i></span>
+              <span class="btn-inner--text" onclick="window.print();" >Print</span>
+            </button>
+          </div>
 
         <div class="card">
              <div class="card-header bg.success">Reservation ID: {{ reservation.reservation_id }}</div>
