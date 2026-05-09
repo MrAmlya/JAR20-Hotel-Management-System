@@ -1,45 +1,57 @@
 {% extends 'base.html' %}
-<!--ToDo Work on Front end -->
+
 {% block content-title %}
     <h2 class="h3 font-weight-400 mb-0 text-white">{{ title }}</h2>
     <br>
 {% endblock %}
+
 {% block main-content %}
-    {% if checkout_list %}
-    <div class="card">
-        <div class="col-auto">
-            <button type="button" class="btn btn-xs btn-primary btn-icon rounded-pill">
-              <span class="btn-inner--icon"><i class="far fa-edit"></i></span>
-              <span class="btn-inner--text" onclick="window.print();" >Print</span>
-            </button>
-          </div>
-        <table class="table table-hover">
-            <thead>
-            <tr>
-                <th>Check-Out ID</th>
-                <th>Related Check-in</th>
-                <th>Stay Duration</th>
-                <th>Total Amount</th>
-                <th>Pay Amount</th>
-                <th>Check-Out Date Time</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for check_out in checkout_list %}
-            <tr>
-                <td><a href="{% url 'check_out-detail' check_out.id %}">{{ check_out }}</a></td>
-                <td><a href="{% url 'check_in-detail' check_out.check_in.id %}">{{ check_out.check_in }}</a></td>
-                <td>{{ check_out.stay_duration }}</td>
-                <td>{{ check_out.total_amount }}</td>
-                <td>{{ check_out.pay_amount }}</td>
-                <td>{{ check_out.check_out_date_time }}</td>
-            </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    {% else %}
-        <p>There are no check-ins.</p>
-    {% endif %}
+    <div class="card card-fluid">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h6 class="mb-0">Check-Out Records</h6>
+            {% if checkout_list %}
+                <button type="button" class="btn btn-sm btn-primary btn-icon rounded-pill" onclick="window.print();">
+                    <span class="btn-inner--icon"><i class="far fa-print"></i></span>
+                    <span class="btn-inner--text">Print</span>
+                </button>
+            {% endif %}
+        </div>
+
+        <div class="card-body">
+            {% if checkout_list %}
+                <div class="table-responsive">
+                    <table class="table table-hover align-items-center mb-0">
+                        <thead>
+                            <tr>
+                                <th>Check-Out ID</th>
+                                <th>Related Check-in</th>
+                                <th>Stay Duration</th>
+                                <th>Total Amount</th>
+                                <th>Pay Amount</th>
+                                <th>Check-Out Date Time</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for check_out in checkout_list %}
+                                <tr>
+                                    <td><a href="{% url 'check_out-detail' check_out.id %}">{{ check_out }}</a></td>
+                                    <td><a href="{% url 'check_in-detail' check_out.check_in.id %}">{{ check_out.check_in }}</a></td>
+                                    <td>{{ check_out.stay_duration }}</td>
+                                    <td>Rs. {{ check_out.total_amount }}</td>
+                                    <td>Rs. {{ check_out.pay_amount }}</td>
+                                    <td>{{ check_out.check_out_date_time|date:"M d, Y h:i A" }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="text-center py-5">
+                    <span class="d-block display-4 text-muted mb-3"><i class="far fa-plane-departure"></i></span>
+                    <h5 class="mb-2">No check-outs yet</h5>
+                    <p class="text-muted mb-0">Completed guest check-outs will appear here.</p>
+                </div>
+            {% endif %}
+        </div>
     </div>
-        
 {% endblock %}

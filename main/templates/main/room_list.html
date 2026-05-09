@@ -1,91 +1,78 @@
 {% extends "base.html" %}
+
 {% block content-title %}
     <h2 class="h3 font-weight-400 mb-0 text-white">{{ title }}</h2>
     <br>
 {% endblock %}
-{% block main-content %}
-    {% if room_list %}
-    <div class="card">
-      <br>
-      <div class="col-auto">
-        <button type="button" class="btn btn-xs btn-primary btn-icon rounded-pill">
-          <span class="btn-inner--icon"><i class="far fa-edit"></i></span>
-          <span class="btn-inner--text" onclick="window.print();" >Print</span>
-        </button>
-      </div>
-      <br>
-        <div class="table-responsive">
-            <table class="table align-items-center">
-                <thead>
-                <tr>
-                    <th></th>
-                    <th scope="col">Room No</th>
-                    <th scope="col">Room Type</th>
-                    <th scope="col">Room Price</th>
-                    <th scope="col">Availability</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for room in room_list %}
-                <tr>
-                    <td>
-                        <div class="avatar-parent-child">
-                            <div class="icon bg-gradient-info text-white rounded-circle icon-shape">
-                                <i class="far fa-award"></i>
-                            </div>
-                            <span class="avatar-child avatar-badge bg-success"></span>
-                          </div>
-                    </td>
-                    <th scope="row">
-                      <div class="media align-items-center">
-                        <div>
-                         
-                        </div>
-                        <div class="media-body ml-4">
-                          <a href="{% url 'room-detail' room.room_no %}" class="name h6 mb-0 text-sm">{{ room.room_no }}</a>
-                        </div>
-                      </div>
-                    </th>
-                    <td>{{ room.room_type.name }}
-                        <span class="avatar-child avatar-badge bg-success"></span>
-                    </td>
-                    <td>{{ room.room_type.price }}</td>
-                    <td>{% if room.availability %}
-                        <span class="badge badge-success badge-pill">
-                            Available
-                        </span>
-                         {% else %}
-                        <span class="badge badge-warning badge-pill">
-                            Not Available
-                        </span>
-                        {% endif %}
-                    </td>
-                    
-                    <td class="text-right">
-                      <!-- Actions -->
-                      <div class="actions ml-3">
-                        <a href="{% url 'room-detail' room.room_no %}" class="action-item mr-2" data-toggle="tooltip" title="Quick view">
-                          <i class="far fa-external-link-alt"></i>
-                        </a>
-                        <a href="#" class="action-item mr-2" data-toggle="tooltip" title="Edit">
-                          <i class="far fa-pencil-alt"></i>
-                        </a>
-                        <a href="#" class="action-item text-danger mr-2" data-toggle="tooltip" title="Move to trash">
-                          <i class="far fa-trash"></i>
-                        </a>
-                      </div>
-                    </td>
-                  </tr>
 
-                {% endfor %}
-                </tbody>
-            </table>
+{% block main-content %}
+    <div class="card card-fluid">
+        <div class="card-header d-flex flex-wrap justify-content-between align-items-center">
+            <h6 class="mb-2 mb-md-0">Room Inventory</h6>
+            <div>
+                <a class="btn btn-sm {% if filter == 'all' %}btn-primary{% else %}btn-outline-primary{% endif %}" href="{% url 'rooms' %}?filter=all">All</a>
+                <a class="btn btn-sm {% if filter == 'avail' %}btn-primary{% else %}btn-outline-primary{% endif %}" href="{% url 'rooms' %}?filter=avail">Available</a>
+                {% if room_list %}
+                    <button type="button" class="btn btn-sm btn-outline-secondary btn-icon rounded-pill ml-2" onclick="window.print();">
+                        <span class="btn-inner--icon"><i class="far fa-print"></i></span>
+                        <span class="btn-inner--text">Print</span>
+                    </button>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="card-body">
+            {% if room_list %}
+                <div class="table-responsive">
+                    <table class="table table-hover align-items-center mb-0">
+                        <thead>
+                            <tr>
+                                <th>Room</th>
+                                <th>Type</th>
+                                <th>Price</th>
+                                <th>Facilities</th>
+                                <th>Status</th>
+                                <th class="text-right">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for room in room_list %}
+                                <tr>
+                                    <td>
+                                        <div class="media align-items-center">
+                                            <div class="icon bg-gradient-info text-white rounded-circle icon-shape mr-3">
+                                                <i class="far fa-door-open"></i>
+                                            </div>
+                                            <div class="media-body">
+                                                <a href="{% url 'room-detail' room.room_no %}" class="name h6 mb-0 text-sm">{{ room.room_no }}</a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>{{ room.room_type.name }}</td>
+                                    <td>Rs. {{ room.room_type.price }}</td>
+                                    <td>{{ room.display_facility|default:"-" }}</td>
+                                    <td>
+                                        {% if room.availability %}
+                                            <span class="badge badge-success badge-pill">Available</span>
+                                        {% else %}
+                                            <span class="badge badge-warning badge-pill">Reserved</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-right">
+                                        <a href="{% url 'room-detail' room.room_no %}" class="btn btn-sm btn-outline-primary">Details</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="text-center py-5">
+                    <span class="d-block display-4 text-muted mb-3"><i class="far fa-door-open"></i></span>
+                    <h5 class="mb-2">No rooms found</h5>
+                    <p class="text-muted mb-0">Rooms added in the admin panel will appear here.</p>
+                </div>
+            {% endif %}
         </div>
     </div>
-        <p>Filter By: <a href="{% url 'rooms' %}?filter={% if filter == 'all' %}avail{% else %}all{% endif %}">
-            {% if filter == 'all' %}Available{% else %}All{% endif %}</a></p>
-    {% else %}
-        <p>There are no rooms.</p>
-    {% endif %}
 {% endblock %}
-

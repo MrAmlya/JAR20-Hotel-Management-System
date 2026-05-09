@@ -1,6 +1,7 @@
 from django.contrib.auth.decorators import permission_required
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import Permission
 from django.core.exceptions import ValidationError
 from django.db import transaction, IntegrityError
 from django.db.models import Q
@@ -8,11 +9,46 @@ from django.http import Http404
 from django.shortcuts import render, redirect, get_object_or_404  # For displaying in template
 from django.urls import reverse_lazy
 from django.utils import timezone
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.views import generic
 
 from .forms import Signup, ReservationForm, CheckInRequestForm
 from .models import Room, Reservation, Customer, Staff  # Import Models
+
+
+def percentage(part, whole):
+    if whole <= 0:
+        return 0
+    return round((part / whole) * 100)
+
+
+def get_staffs_group():
+    staffs_group, _ = Group.objects.get_or_create(name="Staffs")
+    permissions = Permission.objects.filter(content_type__app_label__in=['main', 'payment'])
+    staffs_group.permissions.add(*permissions)
+    return staffs_group
+
+
+def get_reservation_staff(user):
+    staff = Staff.objects.filter(user=user).first()
+    if staff:
+        return staff
+
+    if user.is_staff or user.is_superuser:
+        first_name = user.first_name or user.username
+        last_name = user.last_name or 'Admin'
+        email = user.email or 'admin@example.com'
+        return Staff.objects.create(
+            first_name=first_name,
+            middle_name='',
+            last_name=last_name,
+            contact_no='N/A',
+            address='N/A',
+            email_address=email,
+            user=user,
+        )
+
+    raise Http404(_("Your account is not linked to a staff profile."))
 
 
 def index(request):
@@ -21,15 +57,26 @@ def index(request):
     This is a function based view.
     """
     page_title = _("Hotel Management System")  # For page title as well as heading
-    total_num_rooms = Room.objects.all().count()
-    available_num_rooms = Room.objects.exclude(reservation__isnull=False).count()
-    total_num_reservations = Reservation.objects.all().count()
-    total_num_staffs = Staff.objects.all().count()
-    total_num_customers = Customer.objects.all().count()
-    if total_num_reservations == 0:
-        last_reserved_by = Reservation.objects.none()
-    else:
-        last_reserved_by = Reservation.objects.get_queryset().latest('reservation_date_time')
+    total_num_rooms = Room.objects.count()
+    available_num_rooms = Room.objects.filter(reservation__isnull=True).count()
+    reserved_num_rooms = total_num_rooms - available_num_rooms
+    total_num_reservations = Reservation.objects.count()
+    pending_reservations = Reservation.objects.filter(checkin__isnull=True).count()
+    active_reservations = Reservation.objects.filter(
+        checkin__isnull=False,
+        checkin__checkout__isnull=True,
+    ).count()
+    completed_reservations = Reservation.objects.filter(checkin__checkout__isnull=False).count()
+    total_num_staffs = Staff.objects.count()
+    staff_with_accounts = Staff.objects.filter(user__isnull=False).count()
+    staff_without_accounts = total_num_staffs - staff_with_accounts
+    total_num_customers = Customer.objects.count()
+    active_customers = Customer.objects.filter(
+        reservation__checkin__isnull=False,
+        reservation__checkin__checkout__isnull=True,
+    ).distinct().count()
+    customers_with_reservations = Customer.objects.filter(reservation__isnull=False).distinct().count()
+    last_reserved_by = Reservation.objects.order_by('-reservation_date_time').first()
 
     return render(
         request,
@@ -42,9 +89,22 @@ def index(request):
             'title': page_title,
             'total_num_rooms': total_num_rooms,
             'available_num_rooms': available_num_rooms,
+            'reserved_num_rooms': reserved_num_rooms,
             'total_num_reservations': total_num_reservations,
+            'pending_reservations': pending_reservations,
+            'active_reservations': active_reservations,
+            'completed_reservations': completed_reservations,
             'total_num_staffs': total_num_staffs,
+            'staff_with_accounts': staff_with_accounts,
+            'staff_without_accounts': staff_without_accounts,
             'total_num_customers': total_num_customers,
+            'active_customers': active_customers,
+            'customers_with_reservations': customers_with_reservations,
+            'room_occupancy_percent': percentage(reserved_num_rooms, total_num_rooms),
+            'available_rooms_percent': percentage(available_num_rooms, total_num_rooms),
+            'active_reservation_percent': percentage(active_reservations, total_num_reservations),
+            'staff_account_percent': percentage(staff_with_accounts, total_num_staffs),
+            'active_customer_percent': percentage(active_customers, total_num_customers),
             'last_reserved_by': last_reserved_by,
         }
     )
@@ -60,7 +120,7 @@ def signup(request):
         if form.is_valid():
             try:
                 with transaction.atomic():
-                    staffs_group = get_object_or_404(Group, name__iexact="Staffs")
+                    staffs_group = get_staffs_group()
                     form.save()
                     staff_id = form.cleaned_data['staff_id']
                     username = form.cleaned_data['username']
@@ -104,7 +164,7 @@ def reserve(request):
                     customer.save()
                     staff = request.user
                     reservation = Reservation(
-                        staff=get_object_or_404(Staff, user=staff),
+                        staff=get_reservation_staff(staff),
                         customer=customer,
                         no_of_children=reservation_form.cleaned_data.get('no_of_children'),
                         no_of_adults=reservation_form.cleaned_data.get('no_of_adults'),
@@ -137,7 +197,7 @@ def reserve(request):
 
 
 def reserve_success(request):
-    pass
+    return redirect('reservations')
 
 
 # For generic ListView or DetailView, the default templates should be stored in templates/{{app_name}}/{{template_name}}
@@ -248,6 +308,22 @@ class CustomerDetailView(PermissionRequiredMixin, generic.DetailView):
     raise_exception = True
     extra_context = {'title': title}
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        customer = self.object
+        reservations = customer.reservation_set.all().order_by('-reservation_date_time')
+        context['reservations'] = reservations
+        context['reservation_count'] = reservations.count()
+        context['active_reservation_count'] = reservations.filter(
+            checkin__isnull=False,
+            checkin__checkout__isnull=True,
+        ).count()
+        context['completed_reservation_count'] = reservations.filter(
+            checkin__checkout__isnull=False,
+        ).count()
+        context['latest_reservation'] = reservations.first()
+        return context
+
 
 class StaffDetailView(PermissionRequiredMixin, generic.DetailView):
     """
@@ -268,8 +344,22 @@ class ProfileView(generic.TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         if self.request.user.is_authenticated:
-            context['information'] = get_object_or_404(Staff, user=self.request.user)
-            context['user_information'] = self.request.user
+            from payment.models import CheckIn, CheckOut
+
+            user = self.request.user
+            staff_profile = Staff.objects.filter(user=user).first()
+            display_name = user.get_full_name() or user.username
+
+            context['display_name'] = display_name
+            context['staff_profile'] = staff_profile
+            context['user_information'] = user
+            context['role_label'] = 'Administrator' if user.is_superuser else 'Staff'
+            context['reservations_handled'] = (
+                Reservation.objects.filter(staff=staff_profile).count()
+                if staff_profile else 0
+            )
+            context['checkins_processed'] = CheckIn.objects.filter(user=user).count()
+            context['checkouts_processed'] = CheckOut.objects.filter(user=user).count()
         else:
             raise Http404("Your are not logged in.")
         return context

@@ -1,18 +1,16 @@
 from math import ceil
 
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.utils import timezone
-from django.utils.encoding import python_2_unicode_compatible
-from django.http import HttpRequest
 
 from main.models import Reservation, Room
 
 
 # Create your models here.
-@python_2_unicode_compatible
 class CheckIn(models.Model):
     id = models.CharField(max_length=50, primary_key=True, blank=True, editable=False)
     reservation = models.OneToOneField(Reservation, on_delete=models.CASCADE)
@@ -47,7 +45,6 @@ class CheckIn(models.Model):
         super().save(*args, **kwargs)
 
 
-@python_2_unicode_compatible
 class CheckOut(models.Model):
     check_in = models.OneToOneField(CheckIn, on_delete=models.CASCADE)
     stay_duration = models.DurationField(null=True, editable=False)
@@ -60,6 +57,8 @@ class CheckOut(models.Model):
         return str(self.id)
 
     def save(self, *args, **kwargs):
+        if CheckOut.objects.filter(check_in=self.check_in).exclude(pk=self.pk).exists():
+            raise ValidationError("This check-in has already been checked out.")
         if not self.id:
             self.check_out_date_time = timezone.now()
             self.stay_duration = self.check_out_date_time - self.check_in.check_in_date_time

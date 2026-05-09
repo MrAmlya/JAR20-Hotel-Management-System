@@ -14,7 +14,7 @@ urlpatterns = [
     path('rooms/', views.RoomListView.as_view(), name='rooms'),  # List of Rooms
     path('reservations/', views.ReservationListView.as_view(), name='reservations'),  # List of Reservations
     # <int:pk> takes the argument sent in urls.
-    path('room/<int:pk>', views.RoomDetailView.as_view(), name='room-detail'),  # Detail of each room
+    path('room/<str:pk>', views.RoomDetailView.as_view(), name='room-detail'),  # Detail of each room
     # Detail of each reservation
     path('reservation/<str:pk>', views.ReservationDetailView.as_view(), name='reservation-detail'),
     path('customer/<str:pk>', views.CustomerDetailView.as_view(), name='customer-detail'),  # Detail of each customer

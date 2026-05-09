@@ -1,10 +1,10 @@
 from django import forms
 from django.contrib.auth.models import User
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from payment.models import CheckIn
 from .models import Staff, Room
-from .widgets import MySplitDateTime, FilteredSelectMultiple
+from .widgets import MySplitDateTime
 
 
 class Signup(forms.Form):
@@ -231,6 +231,7 @@ class ReservationForm(forms.Form):
         )
     )
     no_of_children = forms.IntegerField(
+        min_value=0,
         widget=forms.NumberInput(
             attrs={
                 'class': 'form-control',
@@ -239,6 +240,7 @@ class ReservationForm(forms.Form):
         )
     )
     no_of_adults = forms.IntegerField(
+        min_value=1,
         widget=forms.NumberInput(
             attrs={
                 'class': 'form-control',
@@ -247,14 +249,11 @@ class ReservationForm(forms.Form):
         )
     )
     rooms = forms.ModelMultipleChoiceField(
-        queryset=Room.objects.filter(reservation__isnull=True),
-        widget=FilteredSelectMultiple(
-            is_stacked=True,
-            verbose_name="Rooms",
-            attrs={
-                'class': 'form-control',
-            },
-        ),
+        queryset=Room.objects.none(),
+        widget=forms.SelectMultiple(attrs={
+            'class': 'form-control',
+            'size': 8,
+        }),
     )
     expected_arrival_date_time = forms.SplitDateTimeField(
         widget=MySplitDateTime(
@@ -268,11 +267,22 @@ class ReservationForm(forms.Form):
         )
     )
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['rooms'].queryset = Room.objects.filter(reservation__isnull=True)
 
-    def decompress(self, value):
-        if value:
-            return [value.date(), value.time()]
-        return [None, None]
+    def clean(self):
+        cleaned_data = super().clean()
+        arrival = cleaned_data.get('expected_arrival_date_time')
+        departure = cleaned_data.get('expected_departure_date_time')
+
+        if arrival and departure and departure <= arrival:
+            raise forms.ValidationError(
+                self.error_messages['date_time_error'],
+                code='date_time_error',
+            )
+
+        return cleaned_data
 
 
 class CheckInRequestForm(forms.ModelForm):

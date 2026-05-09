@@ -18,8 +18,7 @@
   {% load static %}
   <link href="{% static 'img/brand/favicon.png' %}" rel="icon"  type="image/png">
   <!-- Font Awesome 5 -->
-  <link href="{% static 'libs/%40fortawesome/fontawesome-pro/css/all.min.css' %}" rel="stylesheet" ><!-- Page CSS -->
-  <link href="{% static 'libs/fullcalendar/dist/fullcalendar.min.css' %}" rel="stylesheet" >
+  <link href="{% static 'libs/@fortawesome/fontawesome-pro/css/all.min.css' %}" rel="stylesheet" >
   <!-- Purpose CSS -->
   
   <link href="{% static 'css/docs.css' %}" id="stylesheet" rel="stylesheet" >
@@ -60,13 +59,19 @@
       <div class="sidenav-user d-flex flex-column align-items-center justify-content-between text-center">
         <!-- Avatar -->
         <div>
-          <a href="#" class="avatar rounded-circle avatar-xl">
+          <a href="{% if user.is_authenticated %}{% url 'profile' %}{% else %}{% url 'login' %}{% endif %}" class="avatar rounded-circle avatar-xl">
             <img alt="Image placeholder" src="{% static 'img/theme/light/brand-avatar-11.png' %}" class="">
           </a>
           <div class="mt-4">
             {% block login-status %}
               {% if user.is_authenticated %}
-                <h5 class="mb-0 text-white">{{ user.first_name }} {{ user.last_name }}</h5>
+                <h5 class="mb-0 text-white">
+                  {% if user.first_name %}
+                    {{ user.first_name }} {{ user.last_name }}
+                  {% else %}
+                    {{ user.username }}
+                  {% endif %}
+                </h5>
                 <br>
                 <a href="{% url 'logout' %}?next={{ request.path }}" class="btn btn-sm btn-white btn-icon rounded-pill shadow hover-translate-y-n3">
                 <span class="btn-inner--text">Logout</span>
@@ -160,7 +165,7 @@
                 <a href="#" class="nav-link nav-link-icon" data-action="omnisearch-open" data-target="#omnisearch"><i class="far fa-search"></i></a>
               </li>
               <li class="nav-item dropdown dropdown-animate">
-                <a class="nav-link pr-lg-0" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <a class="nav-link pr-lg-0" href="{% if user.is_authenticated %}{% url 'profile' %}{% else %}{% url 'login' %}{% endif %}" role="button">
                   <span class="avatar avatar-sm rounded-circle">
                     <img alt="Image placeholder" src="{% static 'img/theme/light/team-4-800x800.jpg' %}">
                   </span>
@@ -190,7 +195,13 @@
                             <img alt="Image placeholder" src="{% static 'img/theme/light/team-4-800x800.jpg' %}">
                           </span>
                           <div class="ml-2 d-none d-lg-block">
-                            <span class="mb-0 text-sm  font-weight-bold">{{user.first_name}} {{user.last_name}}</span>
+                            <span class="mb-0 text-sm  font-weight-bold">
+                              {% if user.first_name %}
+                                {{ user.first_name }} {{ user.last_name }}
+                              {% else %}
+                                {{ user.username }}
+                              {% endif %}
+                            </span>
                           </div>
                         </div>
                       </a>
@@ -235,7 +246,18 @@
         <div class="page-title">
           <div class="row justify-content-between align-items-center">
             <div class="col-md-6 mb-3 mb-md-0">
-              <h5 class="h3 font-weight-400 mb-0 text-white">Moning, {{user.first_name}} {{user.last_name}}!</h5>
+              <h5 class="h3 font-weight-400 mb-0 text-white">
+                Good morning,
+                {% if user.is_authenticated %}
+                  {% if user.first_name %}
+                    {{ user.first_name }}
+                  {% else %}
+                    {{ user.username }}
+                  {% endif %}
+                {% else %}
+                  Guest
+                {% endif %}!
+              </h5>
               <span class="text-sm text-white opacity-8">Have a nice day!</span>
             </div>
           </div>
@@ -329,14 +351,8 @@
   <script src="{% static 'js/jquery.init.js' %}"></script>
   <script src="{% static 'js/calendar.js' %}"></script>
 
-  <!-- Page JS -->
-  <link rel="stylesheet" href="{% static 'libs/flatpickr/dist/flatpickr.min.css' %}">
-  <script src="{% static 'libs/flatpickr/dist/flatpickr.min.js' %}"></script>
   <script src="{% static 'libs/progressbar.js/dist/progressbar.min.js' %}"></script>
-  <script src="{% static 'libs/apexcharts/dist/apexcharts.min.js' %}"></script>
   <script src="{% static 'libs/moment/min/moment.min.js' %}"></script>
-  <script src="{% static 'libs/typed.js/lib/typed.min.js' %}"></script>
-  <script src="{% static 'libs/fullcalendar/dist/fullcalendar.min.js' %}"></script>
   <!-- Purpose JS -->
   <script src="{% static 'js/purpose.js' %}"></script>
   <!-- Demo JS - remove it when starting your project -->

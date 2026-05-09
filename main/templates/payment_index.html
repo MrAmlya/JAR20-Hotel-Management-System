@@ -1,84 +1,218 @@
 {% extends 'base.html' %}
+
 {% block content-title %}
-    <h2 class="h3 font-weight-400 mb-0 text-white">{{ title }}</h2><br>
+    <h2 class="h3 font-weight-400 mb-0 text-white">{{ title }}</h2>
+    <br>
 {% endblock %}
-<!-- ToDo Work on FrontEnd -->
+
 {% block main-content %}
-<div class="row">
-  <div class="col-lg-4">
-    <!-- Profile storage -->
-    <div class="card card-fluid">
-      <div class="card-header">
-        <h6 class="mb-0">Total Reservation</h6>
-      </div>
-      <div class="card-body">
-        <div class="progress-circle progress-lg mx-auto" id="progress-circle-1" data-progress="75" data-text="{{ num_of_reservations }}" data-color="info">
+    <style>
+        .payment-card {
+            min-height: 28rem;
+        }
+
+        .payment-card .card-body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .payment-chart {
+            position: relative;
+            width: 10rem;
+            height: 10rem;
+        }
+
+        .payment-chart svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .payment-chart .progressbar-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #3c4858;
+            font-size: 1.75rem;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .payment-stat-row {
+            gap: 1rem;
+        }
+
+        .payment-stat {
+            min-width: 0;
+        }
+
+        .payment-stat .badge {
+            white-space: normal;
+        }
+
+        .payment-empty {
+            min-height: 10rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            border-radius: .375rem;
+        }
+    </style>
+
+    <div class="row">
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card card-fluid payment-card">
+                <div class="card-header">
+                    <h6 class="mb-0">Reservation Conversion</h6>
+                </div>
+                <div class="card-body">
+                    <div class="progress-circle payment-chart mx-auto" data-progress="{{ checkin_percent }}" data-text="{{ num_of_reservations }}" data-color="info"></div>
+                    <small class="d-block mt-3 text-center text-muted">{{ checkin_percent }}% checked in</small>
+                    <div class="d-flex payment-stat-row my-4 px-4">
+                        <div class="col payment-stat">
+                            <span class="badge badge-dot badge-lg h6">
+                                <i class="bg-success"></i>{{ num_of_check_ins }}
+                            </span>
+                            <small class="d-block text-muted">Checked in</small>
+                        </div>
+                        <div class="col payment-stat">
+                            <span class="badge badge-dot badge-lg h6">
+                                <i class="bg-warning"></i>{{ pending_check_ins }}
+                            </span>
+                            <small class="d-block text-muted">Waiting</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <div class="d-flex my-4 px-5">
-          <div class="col">
-            <span class="badge badge-dot badge-lg h6">
-              <i class="bg-success"></i>{{ available_num_rooms }}
-            </span>
-            <small class="d-block text-muted">Available</small>
-          </div>
-          <div class="col">
-            <span class="badge badge-dot badge-lg h6">
-              <i class="bg-warning"></i>{{ total_num_reservations }}
-            </span>
-            <small class="d-block text-muted">Reserved</small>
-          </div>
-        </div>
-       
-      </div>
-    </div>
-  </div>
-  <div class="col-lg-4">
-    <!-- Profile storage -->
-    <div class="card card-fluid">
-      <div class="card-header">
-        <h6 class="mb-0">Total Check-Ins</h6>
-      </div>
-      <div class="card-body">
-        <div class="progress-circle progress-lg mx-auto" id="progress-circle-1" data-progress="75" data-text="{{ num_of_check_ins }}" data-color="success">
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card card-fluid payment-card">
+                <div class="card-header">
+                    <h6 class="mb-0">Check-Ins</h6>
+                </div>
+                <div class="card-body">
+                    <div class="progress-circle payment-chart mx-auto" data-progress="{{ active_checkin_percent }}" data-text="{{ num_of_check_ins }}" data-color="success"></div>
+                    <small class="d-block mt-3 text-center text-muted">{{ active_checkin_percent }}% currently active</small>
+                    <div class="d-flex payment-stat-row my-4 px-4">
+                        <div class="col payment-stat">
+                            <span class="badge badge-dot badge-lg h6">
+                                <i class="bg-success"></i>{{ active_check_ins }}
+                            </span>
+                            <small class="d-block text-muted">Active stays</small>
+                        </div>
+                        <div class="col payment-stat">
+                            <span class="badge badge-dot badge-lg h6">
+                                <i class="bg-warning"></i>{{ completed_check_ins }}
+                            </span>
+                            <small class="d-block text-muted">Completed</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <div class="d-flex my-4 px-5">
-          <div class="col">
-            <span class="badge badge-dot badge-lg h6">
-              <i class="bg-success"></i>{{ available_num_rooms }}
-            </span>
-            <small class="d-block text-muted">Available</small>
-          </div>
-          <div class="col">
-            <span class="badge badge-dot badge-lg h6">
-              <i class="bg-warning"></i>{{ total_num_reservations }}
-            </span>
-            <small class="d-block text-muted">Reserved</small>
-          </div>
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card card-fluid payment-card">
+                <div class="card-header">
+                    <h6 class="mb-0">Check-Outs</h6>
+                </div>
+                <div class="card-body">
+                    <div class="progress-circle payment-chart mx-auto" data-progress="{{ checkout_percent }}" data-text="{{ num_of_check_outs }}" data-color="primary"></div>
+                    <small class="d-block mt-3 text-center text-muted">{{ checkout_percent }}% of check-ins checked out</small>
+                    <div class="d-flex payment-stat-row my-4 px-4">
+                        <div class="col payment-stat">
+                            <span class="badge badge-dot badge-lg h6">
+                                <i class="bg-success"></i>{{ num_of_check_outs }}
+                            </span>
+                            <small class="d-block text-muted">Checked out</small>
+                        </div>
+                        <div class="col payment-stat">
+                            <span class="badge badge-dot badge-lg h6">
+                                <i class="bg-warning"></i>{{ active_check_ins }}
+                            </span>
+                            <small class="d-block text-muted">Still staying</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-       
-      </div>
-    </div>
-  </div>
-  <div class="col-lg-4">
-    <!-- Profile storage -->
-    <div class="card card-fluid">
-      <div class="card-header">
-        <h6 class="mb-0">Last Check-In</h6>
-      </div>
-      <div class="card-body">
-        <div class="">
-          {% if last_checked_in.id %}
-          <p class="card-title"><a href="{% url 'check_in-detail' last_checked_in.id %}">{{ last_checked_in }}</a><p>
-          {% else %}
-          <div class="card-title">Not Yet</div>
-          {% endif %}
-                      
-        </div>
-       
-      </div>
-    </div>
-  </div>
 
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card card-fluid payment-card">
+                <div class="card-header">
+                    <h6 class="mb-0">Collections</h6>
+                </div>
+                <div class="card-body">
+                    <div class="progress-circle payment-chart mx-auto" data-progress="{{ collection_percent }}" data-text="{{ total_collected }}" data-color="warning"></div>
+                    <small class="d-block mt-3 text-center text-muted">Rs. {{ total_collected }} collected</small>
+                    <div class="d-flex payment-stat-row my-4 px-4">
+                        <div class="col payment-stat">
+                            <span class="badge badge-dot badge-lg h6">
+                                <i class="bg-success"></i>Rs. {{ initial_collected }}
+                            </span>
+                            <small class="d-block text-muted">Check-in advance</small>
+                        </div>
+                        <div class="col payment-stat">
+                            <span class="badge badge-dot badge-lg h6">
+                                <i class="bg-warning"></i>Rs. {{ checkout_balance_collected }}
+                            </span>
+                            <small class="d-block text-muted">Checkout balance</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card card-fluid payment-card">
+                <div class="card-header">
+                    <h6 class="mb-0">Last Check-In</h6>
+                </div>
+                <div class="card-body">
+                    {% if last_checked_in %}
+                        <div>
+                            <span class="badge badge-success mb-3">Check-in</span>
+                            <h5 class="mb-2">
+                                <a href="{% url 'check_in-detail' last_checked_in.id %}">{{ last_checked_in }}</a>
+                            </h5>
+                            <p class="mb-1 text-muted">{{ last_checked_in.check_in_date_time|date:"M d, Y" }} at {{ last_checked_in.check_in_date_time|time:"h:i A" }}</p>
+                            <p class="mb-0 text-muted">Advance paid: Rs. {{ last_checked_in.initial_amount }}</p>
+                        </div>
+                    {% else %}
+                        <div class="payment-empty bg-dark text-white">
+                            <h5 class="mb-0 text-white">No check-ins yet</h5>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card card-fluid payment-card">
+                <div class="card-header">
+                    <h6 class="mb-0">Last Check-Out</h6>
+                </div>
+                <div class="card-body">
+                    {% if last_checked_out %}
+                        <div>
+                            <span class="badge badge-primary mb-3">Check-out</span>
+                            <h5 class="mb-2">
+                                <a href="{% url 'check_out-detail' last_checked_out.id %}">{{ last_checked_out }}</a>
+                            </h5>
+                            <p class="mb-1 text-muted">{{ last_checked_out.check_out_date_time|date:"M d, Y" }} at {{ last_checked_out.check_out_date_time|time:"h:i A" }}</p>
+                            <p class="mb-1 text-muted">Total bill: Rs. {{ last_checked_out.total_amount }}</p>
+                            <p class="mb-0 text-muted">Balance paid: Rs. {{ last_checked_out.pay_amount }}</p>
+                        </div>
+                    {% else %}
+                        <div class="payment-empty bg-dark text-white">
+                            <h5 class="mb-0 text-white">No check-outs yet</h5>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

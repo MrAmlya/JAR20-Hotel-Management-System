@@ -1,49 +1,191 @@
 {% extends 'base.html' %}
 {% load static %}
+
 {% block content-title %}
-    <h2 class="h3 font-weight-400 mb-0 text-white">Profile Information</h2>
+    <h2 class="h3 font-weight-400 mb-0 text-white">Profile</h2>
     <br>
-{% endblock %}  
+{% endblock %}
 
 {% block main-content %}
-<div class="card card-fluid">
-    <div class="card-header">
-      <div class="row align-items-center">
-        <div class="col-auto">
-          <!-- Avatar -->
-          <a href="#" class="avatar rounded-circle avatar-lg">
-            <img alt="Image placeholder" src="{{ MEDIA_URL }}{{ information.profile_picture }}" class="">
-          </a>
+    <style>
+        .profile-hero {
+            overflow: hidden;
+        }
+
+        .profile-avatar {
+            width: 7rem;
+            height: 7rem;
+            object-fit: cover;
+        }
+
+        .profile-metric {
+            min-height: 7rem;
+        }
+
+        .profile-label {
+            display: block;
+            color: #8492a6;
+            font-size: .875rem;
+            margin-bottom: .25rem;
+        }
+
+        .profile-value {
+            color: #3c4858;
+            font-weight: 600;
+            word-break: break-word;
+        }
+
+        .profile-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: .75rem;
+        }
+
+        .profile-actions .btn {
+            min-width: 8.5rem;
+        }
+    </style>
+
+    <div class="row">
+        <div class="col-lg-4 mb-4">
+            <div class="card card-fluid profile-hero">
+                <div class="card-body text-center">
+                    {% if staff_profile and staff_profile.profile_picture %}
+                        <img alt="{{ display_name }}" src="{{ staff_profile.profile_picture.url }}" class="avatar rounded-circle profile-avatar mb-4">
+                    {% else %}
+                        <img alt="{{ display_name }}" src="{% static 'img/theme/light/team-4-800x800.jpg' %}" class="avatar rounded-circle profile-avatar mb-4">
+                    {% endif %}
+
+                    <h4 class="mb-1">{{ display_name }}</h4>
+                    <span class="badge badge-primary">{{ role_label }}</span>
+                    <p class="text-muted mt-3 mb-0">{{ user_information.email|default:"No email added" }}</p>
+                </div>
+                <div class="card-footer">
+                    <div class="row text-center">
+                        <div class="col">
+                            <a href="{% url 'index' %}" class="btn btn-sm btn-outline-primary btn-block">Dashboard</a>
+                        </div>
+                        <div class="col">
+                            <a href="{% url 'logout' %}?next={% url 'index' %}" class="btn btn-sm btn-outline-danger btn-block">Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="col ml-md-n2">
-          <a href="#!" class="d-block h6 mb-0">{{user.first_name}} {{user.last_name}}</a>
-          <small class="d-block text-muted">{{ user_information.username }}</small>
+
+        <div class="col-lg-8 mb-4">
+            <div class="card card-fluid">
+                <div class="card-header">
+                    <h6 class="mb-0">Account Information</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <span class="profile-label">Username</span>
+                            <span class="profile-value">{{ user_information.username }}</span>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <span class="profile-label">Full name</span>
+                            <span class="profile-value">{{ display_name }}</span>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <span class="profile-label">Email</span>
+                            <span class="profile-value">{{ user_information.email|default:"Not provided" }}</span>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <span class="profile-label">Account type</span>
+                            <span class="profile-value">{{ role_label }}</span>
+                        </div>
+                        <div class="col-md-6 mb-4 mb-md-0">
+                            <span class="profile-label">Date joined</span>
+                            <span class="profile-value">{{ user_information.date_joined|date:"M d, Y" }}</span>
+                        </div>
+                        <div class="col-md-6">
+                            <span class="profile-label">Last login</span>
+                            <span class="profile-value">{{ user_information.last_login|date:"M d, Y h:i A"|default:"Not recorded" }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card card-fluid mt-4">
+                <div class="card-header">
+                    <h6 class="mb-0">Staff Details</h6>
+                </div>
+                <div class="card-body">
+                    {% if staff_profile %}
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <span class="profile-label">Staff ID</span>
+                                <span class="profile-value">{{ staff_profile.staff_id }}</span>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <span class="profile-label">Contact number</span>
+                                <span class="profile-value">{{ staff_profile.contact_no }}</span>
+                            </div>
+                            <div class="col-md-6 mb-4 mb-md-0">
+                                <span class="profile-label">Staff email</span>
+                                <span class="profile-value">{{ staff_profile.email_address }}</span>
+                            </div>
+                            <div class="col-md-6">
+                                <span class="profile-label">Address</span>
+                                <span class="profile-value">{{ staff_profile.address }}</span>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-secondary mb-0">
+                            This account is not linked to a staff profile yet.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
         </div>
-        <div class="col-auto">
-          <button type="button" class="btn btn-xs btn-primary btn-icon rounded-pill">
-            <span class="btn-inner--icon"><i class="far fa-edit"></i></span>
-            <span class="btn-inner--text" onclick="window.print();" >Print</span>
-          </button>
+
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card card-fluid profile-metric">
+                <div class="card-body">
+                    <span class="profile-label">Reservations handled</span>
+                    <h3 class="mb-0">{{ reservations_handled }}</h3>
+                </div>
+            </div>
         </div>
-      </div>
-      <hr>
-      Username: {{ user_information.username }}<br/>
-      Name: {{ information.first_name }} {{ information.middle_name }} {{ information.last_name }}<br/>
-      Contact No: {{ information.contact_no }}<br/>
-      Email: {{ information.email_address }}<br/>
-      Address: {{ information.address }}<br/>
+
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card card-fluid profile-metric">
+                <div class="card-body">
+                    <span class="profile-label">Check-ins processed</span>
+                    <h3 class="mb-0">{{ checkins_processed }}</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card card-fluid profile-metric">
+                <div class="card-body">
+                    <span class="profile-label">Check-outs processed</span>
+                    <h3 class="mb-0">{{ checkouts_processed }}</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="mb-0">Quick Links</h6>
+                </div>
+                <div class="card-body">
+                    <div class="profile-actions">
+                        <a href="{% url 'reserve' %}" class="btn btn-sm btn-primary">Book Room</a>
+                        <a href="{% url 'reservations' %}" class="btn btn-sm btn-outline-primary">Reservations</a>
+                        <a href="{% url 'check_in-list' %}" class="btn btn-sm btn-outline-primary">Check-Ins</a>
+                        <a href="{% url 'check_out-list' %}" class="btn btn-sm btn-outline-primary">Check-Outs</a>
+                        <a href="{% url 'payment-index' %}" class="btn btn-sm btn-outline-primary">Payments</a>
+                        {% if user_information.is_staff %}
+                            <a href="{% url 'admin:index' %}" class="btn btn-sm btn-outline-primary">Admin Panel</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    
-    <div class="card-footer">
-      <div class="row align-items-center">
-        <div class="col-6">
-          <button type="button" class="btn btn-sm px-0 font-weight-bold btn-link text-primary btn-icon">
-            
-          </button>
-        </div>
-        <div class="col-6 text-right">
-        </div>
-      </div>
-    </div>
-  </div>
 {% endblock %}

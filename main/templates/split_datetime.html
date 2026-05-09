@@ -1,5 +1,11 @@
 {% load i18n %}
-<p class="datetime">
-  {{ date_label }} {% with widget=widget.subwidgets.0 %}{% include widget.template_name %}{% endwith %}<br />
-  {{ time_label }} {% with widget=widget.subwidgets.1 %}{% include widget.template_name %}{% endwith %}
-</p>
+<div class="split-datetime">
+  <div class="split-datetime__field">
+    <label class="split-datetime__label">{% trans "Date" %}</label>
+    {% with widget=widget.subwidgets.0 %}{% include widget.template_name %}{% endwith %}
+  </div>
+  <div class="split-datetime__field">
+    <label class="split-datetime__label">{% trans "Time" %}</label>
+    {% with widget=widget.subwidgets.1 %}{% include widget.template_name %}{% endwith %}
+  </div>
+</div>

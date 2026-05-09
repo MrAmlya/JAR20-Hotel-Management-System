@@ -1,177 +1,233 @@
 {% extends 'base.html' %}
+
 {% block content-title %}
     <h2 class="h3 font-weight-400 mb-0 text-white">{{ title }}</h2>
     <br>
 {% endblock %}
-<!-- ToDo Work on FrontEnd -->
-{% block main-content %}
-    <div class="row">
-      <div class="col-lg-4">
-        <!-- Profile storage -->
-        <div class="card card-fluid">
-          <div class="card-header">
-            <h6 class="mb-0">Total Rooms</h6>
-          </div>
-          <div class="card-body">
-            <div class="progress-circle progress-lg mx-auto" id="progress-circle-1" data-progress="100" data-text="{{ total_num_rooms }}" data-color="info">
-            </div>
 
-            <div class="d-flex my-4 px-5">
-              <div class="col">
-                <span class="badge badge-dot badge-lg h6">
-                  <i class="bg-success"></i>{{ available_num_rooms }}
-                </span>
-                <small class="d-block text-muted">Available</small>
-              </div>
-              <div class="col">
-                <span class="badge badge-dot badge-lg h6">
-                  <i class="bg-warning"></i>{{ total_num_reservations }}
-                </span>
-                <small class="d-block text-muted">Reserved</small>
-              </div>
+{% block main-content %}
+    <style>
+        .dashboard-card {
+            min-height: 28rem;
+        }
+
+        .dashboard-card .card-body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .dashboard-chart {
+            position: relative;
+            width: 10rem;
+            height: 10rem;
+        }
+
+        .dashboard-chart svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .dashboard-chart .progressbar-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #3c4858;
+            font-size: 1.75rem;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .dashboard-stat-row {
+            gap: 1rem;
+        }
+
+        .dashboard-stat {
+            min-width: 0;
+        }
+
+        .dashboard-stat .badge {
+            white-space: normal;
+        }
+
+        .dashboard-empty {
+            min-height: 10rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            border-radius: .375rem;
+        }
+    </style>
+
+    <div class="row">
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card card-fluid dashboard-card">
+                <div class="card-header">
+                    <h6 class="mb-0">Rooms</h6>
+                </div>
+                <div class="card-body">
+                    <div class="progress-circle dashboard-chart mx-auto" data-progress="{{ room_occupancy_percent }}" data-text="{{ total_num_rooms }}" data-color="info"></div>
+                    <small class="d-block mt-3 text-center text-muted">{{ room_occupancy_percent }}% occupied</small>
+                    <div class="d-flex dashboard-stat-row my-4 px-4">
+                        <div class="col dashboard-stat">
+                            <span class="badge badge-dot badge-lg h6">
+                                <i class="bg-success"></i>{{ available_num_rooms }}
+                            </span>
+                            <small class="d-block text-muted">Available</small>
+                        </div>
+                        <div class="col dashboard-stat">
+                            <span class="badge badge-dot badge-lg h6">
+                                <i class="bg-warning"></i>{{ reserved_num_rooms }}
+                            </span>
+                            <small class="d-block text-muted">Reserved</small>
+                        </div>
+                    </div>
+                </div>
             </div>
-           
-          </div>
         </div>
-      </div>
-      <div class="col-lg-4">
-        <!-- Profile storage -->
-        <div class="card card-fluid">
-          <div class="card-header">
-            <h6 class="mb-0">Available Rooms</h6>
-          </div>
-          <div class="card-body">
-            <div class="progress-circle progress-lg mx-auto" id="progress-circle-1" data-progress="80" data-text="{{ available_num_rooms }}" data-color="primary">
-              <script>
-                num1 = 20;
-                num2 = 1;
-                result = 100-((num2/num1)*100) ;
-              </script>
+
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card card-fluid dashboard-card">
+                <div class="card-header">
+                    <h6 class="mb-0">Available Rooms</h6>
+                </div>
+                <div class="card-body">
+                    <div class="progress-circle dashboard-chart mx-auto" data-progress="{{ available_rooms_percent }}" data-text="{{ available_num_rooms }}" data-color="primary"></div>
+                    <small class="d-block mt-3 text-center text-muted">{{ available_rooms_percent }}% available</small>
+                    <div class="d-flex dashboard-stat-row my-4 px-4">
+                        <div class="col dashboard-stat">
+                            <span class="badge badge-dot badge-lg h6">
+                                <i class="bg-success"></i>{{ total_num_rooms }}
+                            </span>
+                            <small class="d-block text-muted">Total rooms</small>
+                        </div>
+                        <div class="col dashboard-stat">
+                            <span class="badge badge-dot badge-lg h6">
+                                <i class="bg-warning"></i>{{ reserved_num_rooms }}
+                            </span>
+                            <small class="d-block text-muted">Reserved</small>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="d-flex my-4 px-5">
-              <div class="col">
-                <span class="badge badge-dot badge-lg h6">
-                  <i class="bg-success"></i>{{ total_num_rooms }}
-                </span>
-                <small class="d-block text-muted">Total Rooms</small>
-              </div>
-              <div class="col">
-                <span class="badge badge-dot badge-lg h6">
-                  <i class="bg-warning"></i>{{ total_num_reservations }}
-                </span>
-                <small class="d-block text-muted">Reserved</small>
-              </div>
-            </div>
-            
-          </div>
         </div>
-      </div>
-      <div class="col-lg-4">
-        <!-- Profile storage -->
-        <div class="card card-fluid">
-          <div class="card-header">
-            <h6 class="mb-0">Total Reservations</h6>
-          </div>
-          <div class="card-body">
-            <div class="progress-circle progress-lg mx-auto" id="progress-circle-1" data-progress="60" data-text="{{ total_num_reservations }}" data-color="success">
+
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card card-fluid dashboard-card">
+                <div class="card-header">
+                    <h6 class="mb-0">Reservations</h6>
+                </div>
+                <div class="card-body">
+                    <div class="progress-circle dashboard-chart mx-auto" data-progress="{{ active_reservation_percent }}" data-text="{{ total_num_reservations }}" data-color="success"></div>
+                    <small class="d-block mt-3 text-center text-muted">{{ active_reservation_percent }}% active</small>
+                    <div class="d-flex dashboard-stat-row my-4 px-4">
+                        <div class="col dashboard-stat">
+                            <span class="badge badge-dot badge-lg h6">
+                                <i class="bg-success"></i>{{ active_reservations }}
+                            </span>
+                            <small class="d-block text-muted">Active stays</small>
+                        </div>
+                        <div class="col dashboard-stat">
+                            <span class="badge badge-dot badge-lg h6">
+                                <i class="bg-warning"></i>{{ pending_reservations }}
+                            </span>
+                            <small class="d-block text-muted">Pending</small>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="d-flex my-4 px-5">
-              <div class="col">
-                <span class="badge badge-dot badge-lg h6">
-                  <i class="bg-success"></i>{{ total_num_customers }}
-                </span>
-                <small class="d-block text-muted">Total Customers</small>
-              </div>
-              <div class="col">
-                <span class="badge badge-dot badge-lg h6">
-                  <i class="bg-warning"></i>{{ total_num_staffs }}
-                </span>
-                <small class="d-block text-muted">Total Staff</small>
-              </div>
-            </div>
-    
-          </div>
         </div>
-      </div>
-      <div class="col-lg-4">
-        <!-- Profile storage -->
-        <div class="card card-fluid">
-          <div class="card-header">
-            <h6 class="mb-0">Total Staff</h6>
-          </div>
-          <div class="card-body">
-            <div class="progress-circle progress-lg mx-auto" id="progress-circle-1" data-progress="40" data-text="{{ total_num_staffs }}" data-color="warning"></div>
-            <div class="d-flex my-4 px-5">
-              <div class="col">
-                <span class="badge badge-dot badge-lg h6">
-                  <i class="bg-success"></i>{{ total_num_staffs }}
-                </span>
-                <small class="d-block text-muted">Present</small>
-              </div>
-              <div class="col">
-                <span class="badge badge-dot badge-lg h6">
-                  <i class="bg-warning"></i>0
-                </span>
-                <small class="d-block text-muted">Not Available</small>
-              </div>
+
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card card-fluid dashboard-card">
+                <div class="card-header">
+                    <h6 class="mb-0">Staff</h6>
+                </div>
+                <div class="card-body">
+                    <div class="progress-circle dashboard-chart mx-auto" data-progress="{{ staff_account_percent }}" data-text="{{ total_num_staffs }}" data-color="warning"></div>
+                    <small class="d-block mt-3 text-center text-muted">{{ staff_account_percent }}% have login accounts</small>
+                    <div class="d-flex dashboard-stat-row my-4 px-4">
+                        <div class="col dashboard-stat">
+                            <span class="badge badge-dot badge-lg h6">
+                                <i class="bg-success"></i>{{ staff_with_accounts }}
+                            </span>
+                            <small class="d-block text-muted">With login</small>
+                        </div>
+                        <div class="col dashboard-stat">
+                            <span class="badge badge-dot badge-lg h6">
+                                <i class="bg-warning"></i>{{ staff_without_accounts }}
+                            </span>
+                            <small class="d-block text-muted">Without login</small>
+                        </div>
+                    </div>
+                </div>
             </div>
-           
-          </div>
         </div>
-      </div>
-      <div class="col-lg-4">
-        <!-- Profile storage -->
-        <div class="card card-fluid">
-          <div class="card-header">
-            <h6 class="mb-0">Total Customers</h6>
-          </div>
-          <div class="card-body">
-            <div class="progress-circle progress-lg mx-auto" id="progress-circle-1" data-progress="64" data-text="{{ total_num_customers }}" data-color="dark"></div>
-            <div class="d-flex my-4 px-5">
-              <div class="col">
-                <span class="badge badge-dot badge-lg h6">
-                  <i class="bg-success"></i>{{ total_num_customers }}
-                </span>
-                <small class="d-block text-muted">Total customers </small>
-              </div>
-              <div class="col">
-                <span class="badge badge-dot badge-lg h6">
-                  <i class="bg-warning"></i>{{ total_num_customers }}
-                </span>
-                <small class="d-block text-muted">Happy customers</small>
-              </div>
+
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card card-fluid dashboard-card">
+                <div class="card-header">
+                    <h6 class="mb-0">Customers</h6>
+                </div>
+                <div class="card-body">
+                    <div class="progress-circle dashboard-chart mx-auto" data-progress="{{ active_customer_percent }}" data-text="{{ total_num_customers }}" data-color="dark"></div>
+                    <small class="d-block mt-3 text-center text-muted">{{ active_customer_percent }}% active guests</small>
+                    <div class="d-flex dashboard-stat-row my-4 px-4">
+                        <div class="col dashboard-stat">
+                            <span class="badge badge-dot badge-lg h6">
+                                <i class="bg-success"></i>{{ customers_with_reservations }}
+                            </span>
+                            <small class="d-block text-muted">With bookings</small>
+                        </div>
+                        <div class="col dashboard-stat">
+                            <span class="badge badge-dot badge-lg h6">
+                                <i class="bg-warning"></i>{{ active_customers }}
+                            </span>
+                            <small class="d-block text-muted">Active guests</small>
+                        </div>
+                    </div>
+                </div>
             </div>
-           
-          </div>
         </div>
-      </div>
-      {% if user.is_authenticated %}
-      <div class="col-lg-4">
-        <!-- Profile storage -->
-        <div class="card card-fluid">
-          <div class="card-header">
-            <h6 class="mb-0">Last Reservation</h6>
-          </div>
-          <div class="card-body">
-            <div class="">
-              {% if last_reserved_by.reservation_id %}
-                      <p class="">Reservation for:<a
-                        href="{% url 'customer-detail' last_reserved_by.customer.customer_id %}" class=>{{ last_reserved_by.customer }}</a>
-                        <p>
-                          Reserved By:
-                            {% if perms.main.can_view_staff_detail %}
-                                <a href="{% url 'staff-detail' last_reserved_by.staff.staff_id %}">{{ last_reserved_by.staff }}</a>
-                                {% else %}{{ last_reserved_by.staff }}
-                            {% endif %}
-                              </div>
-                            {% else %}
-                        <div class="card-body bg-dark text-white">Not Yet</div>
-                    {% endif %}
+
+        {% if user.is_authenticated %}
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card card-fluid dashboard-card">
+                    <div class="card-header">
+                        <h6 class="mb-0">Last Reservation</h6>
+                    </div>
+                    <div class="card-body">
+                        {% if last_reserved_by %}
+                            <div>
+                                <span class="badge badge-success mb-3">Reservation #{{ last_reserved_by.reservation_id }}</span>
+                                <h5 class="mb-2">
+                                    <a href="{% url 'customer-detail' last_reserved_by.customer.customer_id %}">
+                                        {{ last_reserved_by.customer }}
+                                    </a>
+                                </h5>
+                                <p class="mb-1 text-muted">
+                                    {{ last_reserved_by.reservation_date_time|date:"M d, Y" }}
+                                    at {{ last_reserved_by.reservation_date_time|time:"h:i A" }}
+                                </p>
+                                <p class="mb-0 text-muted">
+                                    Reserved by
+                                    {% if perms.main.can_view_staff_detail %}
+                                        <a href="{% url 'staff-detail' last_reserved_by.staff.staff_id %}">{{ last_reserved_by.staff }}</a>
+                                    {% else %}
+                                        {{ last_reserved_by.staff }}
+                                    {% endif %}
+                                </p>
+                            </div>
+                        {% else %}
+                            <div class="dashboard-empty bg-dark text-white">
+                                <h5 class="mb-0 text-white">No reservations yet</h5>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
             </div>
-           
-          </div>
-        </div>
-      </div>
-      {% endif %}
-      
+        {% endif %}
+    </div>
 {% endblock %}

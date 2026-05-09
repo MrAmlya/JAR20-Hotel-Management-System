@@ -1,54 +1,204 @@
 {% extends 'base.html' %}
+
 {% block content-title %}
     <h2 class="h3 font-weight-400 mb-0 text-white">{{ title }}</h2>
     <br>
 {% endblock %}
+
 {% block main-content %}
-<div class="card card-fluid">
-    <div class="card-header">
-      <div class="row align-items-center">
-        <div class="col-auto">
-          <!-- Avatar -->
-          <div class="avatar-parent-child">
-            <div class="icon bg-gradient-info text-white rounded-circle icon-shape">
-                <i class="far fa-award"></i>
+    <style>
+        .customer-avatar {
+            width: 5rem;
+            height: 5rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+
+        .customer-label {
+            display: block;
+            color: #8492a6;
+            font-size: .875rem;
+            margin-bottom: .25rem;
+        }
+
+        .customer-value {
+            color: #3c4858;
+            font-weight: 600;
+            word-break: break-word;
+        }
+
+        .customer-metric {
+            min-height: 7rem;
+        }
+    </style>
+
+    <div class="row">
+        <div class="col-lg-4 mb-4">
+            <div class="card card-fluid">
+                <div class="card-body text-center">
+                    <div class="customer-avatar rounded-circle bg-gradient-info text-white mb-4">
+                        <i class="far fa-user"></i>
+                    </div>
+                    <h4 class="mb-1">{{ customer.first_name }} {{ customer.middle_name }} {{ customer.last_name }}</h4>
+                    <span class="badge badge-primary">Customer #{{ customer.customer_id }}</span>
+                    <p class="text-muted mt-3 mb-0">{{ customer.email_address|default:"No email added" }}</p>
+                </div>
+                <div class="card-footer">
+                    <div class="row text-center">
+                        <div class="col">
+                            <a href="{% url 'guest-list' %}" class="btn btn-sm btn-outline-primary btn-block">Guests</a>
+                        </div>
+                        <div class="col">
+                            <button type="button" class="btn btn-sm btn-outline-secondary btn-block" onclick="window.print();">Print</button>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <span class="avatar-child avatar-badge bg-success"></span>
-          </div>
-        </div>
-        <div class="col ml-md-n2">
-          <a href="#!" class="d-block h6 mb-0">{{ customer.first_name }} {{ customer.last_name }}</a>
-          <small class="d-block text-muted">{{ customer.customer_id }}</small>
-        </div>
-        <div class="col-auto">
-          <button type="button" class="btn btn-xs btn-primary btn-icon rounded-pill">
-            <span class="btn-inner--icon"><i class="far fa-edit"></i></span>
-            <span class="btn-inner--text" onclick="window.print();" >Print</span>
-          </button>
         </div>
 
-      </div>
-      <hr>
-      Id: {{ customer.customer_id }}<br>
-      First Name: {{ customer.first_name }} <br>
-      Last Name: {{ customer.last_name }}<br>
-      Address: {{ customer.address }} <br>
-      Contact No: {{ customer.contact_no }}<br>
-      Email Address: {{ customer.email_address }}<br>
+        <div class="col-lg-8 mb-4">
+            <div class="card card-fluid">
+                <div class="card-header">
+                    <h6 class="mb-0">Contact Information</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <span class="customer-label">Full name</span>
+                            <span class="customer-value">{{ customer.first_name }} {{ customer.middle_name }} {{ customer.last_name }}</span>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <span class="customer-label">Contact number</span>
+                            <span class="customer-value">{{ customer.contact_no }}</span>
+                        </div>
+                        <div class="col-md-6 mb-4 mb-md-0">
+                            <span class="customer-label">Email address</span>
+                            <span class="customer-value">{{ customer.email_address|default:"Not provided" }}</span>
+                        </div>
+                        <div class="col-md-6">
+                            <span class="customer-label">Address</span>
+                            <span class="customer-value">{{ customer.address }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
+            <div class="card card-fluid mt-4">
+                <div class="card-header">
+                    <h6 class="mb-0">Latest Reservation</h6>
+                </div>
+                <div class="card-body">
+                    {% if latest_reservation %}
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <span class="customer-label">Reservation</span>
+                                <a href="{% url 'reservation-detail' latest_reservation.reservation_id %}" class="customer-value">#{{ latest_reservation.reservation_id }}</a>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <span class="customer-label">Reserved on</span>
+                                <span class="customer-value">{{ latest_reservation.reservation_date_time|date:"M d, Y h:i A" }}</span>
+                            </div>
+                            <div class="col-md-6 mb-4 mb-md-0">
+                                <span class="customer-label">Expected arrival</span>
+                                <span class="customer-value">{{ latest_reservation.expected_arrival_date_time|date:"M d, Y h:i A" }}</span>
+                            </div>
+                            <div class="col-md-6">
+                                <span class="customer-label">Expected departure</span>
+                                <span class="customer-value">{{ latest_reservation.expected_departure_date_time|date:"M d, Y h:i A" }}</span>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-secondary mb-0">This customer has no reservations yet.</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card card-fluid customer-metric">
+                <div class="card-body">
+                    <span class="customer-label">Total reservations</span>
+                    <h3 class="mb-0">{{ reservation_count }}</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card card-fluid customer-metric">
+                <div class="card-body">
+                    <span class="customer-label">Active stays</span>
+                    <h3 class="mb-0">{{ active_reservation_count }}</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card card-fluid customer-metric">
+                <div class="card-body">
+                    <span class="customer-label">Completed stays</span>
+                    <h3 class="mb-0">{{ completed_reservation_count }}</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-12">
+            <div class="card card-fluid">
+                <div class="card-header">
+                    <h6 class="mb-0">Reservation History</h6>
+                </div>
+                <div class="card-body">
+                    {% if reservations %}
+                        <div class="table-responsive">
+                            <table class="table table-hover align-items-center mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>Reservation</th>
+                                        <th>Rooms</th>
+                                        <th>Guests</th>
+                                        <th>Arrival</th>
+                                        <th>Departure</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for reservation in reservations %}
+                                        <tr>
+                                            <td><a href="{% url 'reservation-detail' reservation.reservation_id %}">#{{ reservation.reservation_id }}</a></td>
+                                            <td>
+                                                {% for room in reservation.room_set.all %}
+                                                    <span class="badge badge-secondary">{{ room.room_no }}</span>
+                                                {% empty %}
+                                                    <span class="text-muted">No rooms</span>
+                                                {% endfor %}
+                                            </td>
+                                            <td>{{ reservation.no_of_adults }} adult{{ reservation.no_of_adults|pluralize }}, {{ reservation.no_of_children }} child{{ reservation.no_of_children|pluralize:"ren" }}</td>
+                                            <td>{{ reservation.expected_arrival_date_time|date:"M d, Y h:i A" }}</td>
+                                            <td>{{ reservation.expected_departure_date_time|date:"M d, Y h:i A" }}</td>
+                                            <td>
+                                                {% if reservation.checkin.checkout %}
+                                                    <span class="badge badge-success">Checked out</span>
+                                                {% elif reservation.checkin %}
+                                                    <span class="badge badge-primary">Checked in</span>
+                                                {% else %}
+                                                    <span class="badge badge-warning">Reserved</span>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <span class="d-block display-4 text-muted mb-3"><i class="far fa-calendar-check"></i></span>
+                            <h5 class="mb-2">No reservation history</h5>
+                            <p class="text-muted mb-0">Reservations for this customer will appear here.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
     </div>
-    
-    <div class="card-footer">
-      <div class="row align-items-center">
-        <div class="col-6">
-          <button type="button" class="btn btn-sm px-0 font-weight-bold btn-link text-primary btn-icon">
-            
-          </button>
-        </div>
-        <div class="col-6 text-right">
-        </div>
-      </div>
-    </div>
-  </div>
-
 {% endblock %}

@@ -3,6 +3,7 @@
 
 #Database
 *.sqlite3
+db.sqlite3
 
 #IDE 
 .idea/
@@ -88,8 +89,10 @@ celerybeat-schedule
 .env
 
 # virtualenv
+.venv/
 venv/
 ENV/
+myvenv/
 
 # Spyder project settings
 .spyderproject

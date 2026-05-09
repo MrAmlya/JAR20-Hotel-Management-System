@@ -1,98 +1,108 @@
 {% extends 'base.html' %}
-{% block content-title %}
-    <h2 class="h3 font-weight-400 mb-0 text-white">{{ title }}</h2><br>
-{% endblock %}
-{% block main-content %}
-<div class="card">
-    <form action="" method="post" id="checkin">{% csrf_token %}
-        {{ form }}
-    </form>
-    {% if reservation_list %}
-    <div class="col-auto">
-        <button type="button" class="btn btn-xs btn-primary btn-icon rounded-pill">
-          <span class="btn-inner--icon"><i class="far fa-edit"></i></span>
-          <span class="btn-inner--text" onclick="window.print();" >Print</span>
-        </button>
-      </div>
-    <div class="table-responsive">
-        <table class="table table-hover">
-            <thead>
-            <tr>
-                <th>Reservation ID</th>
-                <th>Customer</th>
-                <th>Staff</th>
-                <th>No of Children</th>
-                <th>No of Adults</th>
-                <th>Rooms</th>
-                <th>Reservation Date Time</th>
-                <th>Check In?</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for reservation in reservation_list %}
-                <tr>
-                    <td>
-                        <a href="{% url 'reservation-detail' reservation.reservation_id %}"> {{ reservation.reservation_id }}</a>
-                    </td>
-                    <td>{{ reservation.customer }}</td>
-                    <td>{{ reservation.staff }}</td>
-                    <td>{{ reservation.no_of_children }}</td>
-                    <td>{{ reservation.no_of_adults }}</td>
-                    <td>
-                        {% for room in reservation.room_set.all %}
-                            {{ room.room_no }}{% if not forloop.last %},{% endif %}
-                        {% endfor %}
-                    </td>
-                    <td>{{ reservation.reservation_date_time }}</td>
-                    <td>{% if not reservation.checkin %}
-                        <button id="{{ reservation.reservation_id }}" type="button" class="btn btn-primary confirm-checkin"
-                                data-toggle="modal"
-                                data-target="#checkInConfirmBox">
-                            Check-In
-                        </button>
 
-                    {% else %}
-                        <a class="btn btn-secondary"
-                           href="{% url 'check_in-detail' reservation.checkin.id %}">Details</a>
-                    {% endif %}</td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-        <div class="modal fade" id="checkInConfirmBox">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title">Confirm Check-In</h4>
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    </div>
-                    <div class="modal-body">
-                        <h5>Do you want to confirm check-in?</h5>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-success" form="checkin">
-                            Yes
-                        </button>
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
-                    </div>
+{% block content-title %}
+    <h2 class="h3 font-weight-400 mb-0 text-white">{{ title }}</h2>
+    <br>
+{% endblock %}
+
+{% block main-content %}
+    <div class="card card-fluid">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h6 class="mb-0">Reservation Records</h6>
+            {% if reservation_list %}
+                <button type="button" class="btn btn-sm btn-primary btn-icon rounded-pill" onclick="window.print();">
+                    <span class="btn-inner--icon"><i class="far fa-print"></i></span>
+                    <span class="btn-inner--text">Print</span>
+                </button>
+            {% endif %}
+        </div>
+
+        <div class="card-body">
+            <form action="" method="post" id="checkin">
+                {% csrf_token %}
+                {{ form }}
+            </form>
+
+            {% if reservation_list %}
+                <div class="table-responsive">
+                    <table class="table table-hover align-items-center mb-0">
+                        <thead>
+                            <tr>
+                                <th>Reservation</th>
+                                <th>Customer</th>
+                                <th>Staff</th>
+                                <th>Guests</th>
+                                <th>Rooms</th>
+                                <th>Reserved On</th>
+                                <th>Check-In</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for reservation in reservation_list %}
+                                <tr>
+                                    <td>
+                                        <a href="{% url 'reservation-detail' reservation.reservation_id %}">#{{ reservation.reservation_id }}</a>
+                                    </td>
+                                    <td>{{ reservation.customer }}</td>
+                                    <td>{{ reservation.staff }}</td>
+                                    <td>{{ reservation.no_of_adults }} adult{{ reservation.no_of_adults|pluralize }}, {{ reservation.no_of_children }} child{{ reservation.no_of_children|pluralize:"ren" }}</td>
+                                    <td>
+                                        {% for room in reservation.room_set.all %}
+                                            <span class="badge badge-secondary">{{ room.room_no }}</span>
+                                        {% empty %}
+                                            <span class="text-muted">No rooms</span>
+                                        {% endfor %}
+                                    </td>
+                                    <td>{{ reservation.reservation_date_time|date:"M d, Y h:i A" }}</td>
+                                    <td>
+                                        {% if not reservation.checkin %}
+                                            <button id="{{ reservation.reservation_id }}" type="button" class="btn btn-sm btn-primary confirm-checkin" data-toggle="modal" data-target="#checkInConfirmBox">
+                                                Check-In
+                                            </button>
+                                        {% else %}
+                                            <a class="btn btn-sm btn-secondary" href="{% url 'check_in-detail' reservation.checkin.id %}">Details</a>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="text-center py-5">
+                    <span class="d-block display-4 text-muted mb-3"><i class="far fa-calendar-check"></i></span>
+                    <h5 class="mb-2">No reservations yet</h5>
+                    <p class="text-muted mb-0">New room bookings will appear here.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="modal fade" id="checkInConfirmBox">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Confirm Check-In</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <h5>Do you want to confirm check-in?</h5>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success" form="checkin">Yes</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
                 </div>
             </div>
         </div>
-    {% else %}
-        <p>There are no reservations.</p>
-    {% endif %}
+    </div>
 {% endblock %}
+
 {% block additional-javascript %}
     <script>
         $(document).ready(function () {
             $(".confirm-checkin").click(function () {
-                var $id = $(this).attr("id");
-                $("#id_reservation").attr("value", $id);
+                $("#id_reservation").attr("value", $(this).attr("id"));
             });
         });
     </script>
-    </div>
-        
-</div>
-    
 {% endblock %}

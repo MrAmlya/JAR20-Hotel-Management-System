@@ -4,40 +4,20 @@ from django.utils.translation import gettext as _
 
 
 class MyDateWidget(forms.DateInput):
-    @property
-    def media(self):
-        # extra = '' if settings.DEBUG else '.min'
-        js = [
-            # 'vendor/jquery/jquery%s.js' % extra,
-            'jquery.js',
-            'jquery.init.js',
-            'calendar.js',
-            'DateTimeShortcuts.js',
-        ]
-        return forms.Media(js=["js/%s" % path for path in js])
+    input_type = 'date'
 
     def __init__(self, attrs=None, format=None):
-        final_attrs = {'class': 'vDateField', 'size': '10'}
+        final_attrs = {'class': 'form-control', 'placeholder': 'YYYY-MM-DD'}
         if attrs is not None:
             final_attrs.update(attrs)
         super().__init__(attrs=final_attrs, format=format)
 
 
 class MyTimeWidget(forms.TimeInput):
-    @property
-    def media(self):
-        # extra = '' if settings.DEBUG else '.min'
-        js = [
-            # 'vendor/jquery/jquery%s.js' % extra,
-            'jquery.js',
-            'jquery.init.js',
-            'calendar.js',
-            'DateTimeShortcuts.js',
-        ]
-        return forms.Media(js=["js/%s" % path for path in js])
+    input_type = 'time'
 
     def __init__(self, attrs=None, format=None):
-        final_attrs = {'class': 'vTimeField', 'size': '8'}
+        final_attrs = {'class': 'form-control', 'step': 60}
         if attrs is not None:
             final_attrs.update(attrs)
         super().__init__(attrs=final_attrs, format=format)
@@ -73,13 +53,11 @@ class FilteredSelectMultiple(forms.SelectMultiple):
     @property
     def media(self):
         js = [
-            'jquery.js',
-            'jquery.init.js',
-            'core.js',
-            'SelectBox.js',
-            'SelectFilter2.js',
+            'admin/js/core.js',
+            'admin/js/SelectBox.js',
+            'admin/js/SelectFilter2.js',
         ]
-        return forms.Media(js=["js/%s" % path for path in js])
+        return forms.Media(js=js)
 
     def __init__(self, verbose_name, is_stacked, attrs=None, choices=()):
         self.verbose_name = verbose_name

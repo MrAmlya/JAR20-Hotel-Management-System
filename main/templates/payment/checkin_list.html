@@ -1,99 +1,100 @@
 {% extends 'base.html' %}
-<!--ToDo Work on Front end -->
-{% block content-title %}
-    <h2 class="h3 font-weight-400 mb-0 text-white">{{ title }}</h2><br>
-{% endblock %}
-{% block main-content %}
-    {% if checkin_list %}
-    
-    <div class="card">
-        <div class="col-auto">
-            <button type="button" class="btn btn-xs btn-primary btn-icon rounded-pill">
-              <span class="btn-inner--icon"><i class="far fa-edit"></i></span>
-              <span class="btn-inner--text" onclick="window.print();" >Print</span>
-            </button>
-          </div>
-        <form action="" method="post" id="checkout">{% csrf_token %}
-            {{ form }}
-        </form>
-        
-        <table class="table table-hover">
-            <thead>
-            <tr>
-                <th>Check-In</th>
-                <th>Reservation</th>
-                <th>Rooms</th>
-                <th>Paid Amount</th>
-                <th>Check-In Date Time</th>
-                <th>Checkout?</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for check_in in checkin_list %}
-                <tr>
-                    <td>
-                        <a href="{% url 'check_in-detail' check_in.id %}"> {{ check_in }}</a>
-                    </td>
-                    <td>{{ check_in.reservation }}</td>
-                    <td>{% if check_in.rooms %}{{ check_in.rooms }}{% else %}-{% endif %}</td>
-                    <td>{{ check_in.initial_amount }}</td>
-                    <td>{{ check_in.check_in_date_time }}</td>
-                    <td>
-                        {% if not check_in.checkout %}
-                            <button id="{{ check_in.id }}" type="button" class="btn btn-primary confirm-checkout"
-                                    data-toggle="modal"
-                                    data-target="#checkoutConfirmBox">
-                                Checkout
-                            </button>
 
-                        {% else %}
-                            <a class="btn btn-secondary"
-                               href="{% url 'check_out-detail' check_in.checkout.id %}">Details</a>
-                        {% endif %}
-                    </td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-        <div class="modal fade" id="checkoutConfirmBox">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title">Confirm Checkout</h4>
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    </div>
-                    <div class="modal-body">
-                        <h5>Do you want to confirm checkout?</h5>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-success" form="checkout">
-                            Yes
-                        </button>
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
-                    </div>
+{% block content-title %}
+    <h2 class="h3 font-weight-400 mb-0 text-white">{{ title }}</h2>
+    <br>
+{% endblock %}
+
+{% block main-content %}
+    <div class="card card-fluid">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h6 class="mb-0">Check-In Records</h6>
+            {% if checkin_list %}
+                <button type="button" class="btn btn-sm btn-primary btn-icon rounded-pill" onclick="window.print();">
+                    <span class="btn-inner--icon"><i class="far fa-print"></i></span>
+                    <span class="btn-inner--text">Print</span>
+                </button>
+            {% endif %}
+        </div>
+
+        <div class="card-body">
+            {% if checkin_list %}
+                <form action="" method="post" id="checkout">
+                    {% csrf_token %}
+                    {{ form }}
+                </form>
+
+                <div class="table-responsive">
+                    <table class="table table-hover align-items-center mb-0">
+                        <thead>
+                            <tr>
+                                <th>Check-In</th>
+                                <th>Reservation</th>
+                                <th>Rooms</th>
+                                <th>Paid Amount</th>
+                                <th>Check-In Date Time</th>
+                                <th>Checkout</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for check_in in checkin_list %}
+                                <tr>
+                                    <td>
+                                        <a href="{% url 'check_in-detail' check_in.id %}">{{ check_in }}</a>
+                                    </td>
+                                    <td>{{ check_in.reservation }}</td>
+                                    <td>{% if check_in.rooms %}{{ check_in.rooms }}{% else %}-{% endif %}</td>
+                                    <td>Rs. {{ check_in.initial_amount }}</td>
+                                    <td>{{ check_in.check_in_date_time|date:"M d, Y h:i A" }}</td>
+                                    <td>
+                                        {% if not check_in.checkout %}
+                                            <button id="{{ check_in.id }}" type="button" class="btn btn-sm btn-primary confirm-checkout" data-toggle="modal" data-target="#checkoutConfirmBox">
+                                                Checkout
+                                            </button>
+                                        {% else %}
+                                            <a class="btn btn-sm btn-secondary" href="{% url 'check_out-detail' check_in.checkout.id %}">Details</a>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="text-center py-5">
+                    <span class="d-block display-4 text-muted mb-3"><i class="far fa-key"></i></span>
+                    <h5 class="mb-2">No check-ins yet</h5>
+                    <p class="text-muted mb-0">Confirmed guest check-ins will appear here.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="modal fade" id="checkoutConfirmBox">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Confirm Checkout</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <h5>Do you want to confirm checkout?</h5>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success" form="checkout">Yes</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
                 </div>
             </div>
         </div>
-    {% else %}
-        <p>There are no check-ins.</p>
-    {% endif %}
-    {% block additional-javascript %}
-        <script>
-            $(document).ready(function () {
-                $(".confirm-checkout").click(function () {
-                    var $id = $(this).attr("id");
-                    $("#id_check_in").attr("value", "" + $id);
-                });
-            });
-            /*
-            $(document).ready(function () {
-                $(".confirm-checkout").mouseleave(function () {
-                    $("#id_check_in").removeAttr("value");
-                });
-            });
-            */
-        </script>
     </div>
-        
-    {% endblock %}
+{% endblock %}
+
+{% block additional-javascript %}
+    <script>
+        $(document).ready(function () {
+            $(".confirm-checkout").click(function () {
+                $("#id_check_in").attr("value", $(this).attr("id"));
+            });
+        });
+    </script>
 {% endblock %}

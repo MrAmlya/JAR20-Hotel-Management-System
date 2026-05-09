@@ -1,50 +1,66 @@
 {% extends "base.html" %}
+
 {% block content-title %}
     <h2 class="h3 font-weight-400 mb-0 text-white">{{ title }}</h2>
     <br>
 {% endblock %}
-{% block main-content %}
-    {% if guest_list %}
-    <div class="card">
-        <div class="table-responsive">
-            <table class="table align-items-center">
-                <thead>
-                <tr>
-                    <th></th>
-                    <th>Customer ID</th>
-                    <th>Customer Name</th>
-                    <th><div class="col-auto">
-                        <button type="button" class="btn btn-xs btn-primary btn-icon rounded-pill">
-                          <span class="btn-inner--icon"><i class="far fa-edit"></i></span>
-                          <span class="btn-inner--text" onclick="window.print();" >Print</span>
-                        </button>
-                      </div></th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for guest in guest_list %}
-                    <tr>
-                        <td>
-                            <div class="avatar-parent-child">
-                                <div class="icon bg-gradient-info text-white rounded-circle icon-shape">
-                                    <i class="far fa-award"></i>
-                                </div>
-                                <span class="avatar-child avatar-badge bg-success"></span>
-                              </div>
-                        </td>
-                        <td><a href="{% url 'customer-detail' guest.customer_id %}"> {{ guest.customer_id }}</a></td>
-                        <td>{{ guest.first_name }} {{ guest.middle_name }} {{ guest.last_name }}</td>
-                        
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        
-    </div>
-        
-    {% else %}
-        <p>There are no guests.</p>
-    {% endif %}
-{% endblock %}
 
+{% block main-content %}
+    <div class="card card-fluid">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h6 class="mb-0">In-House Guests</h6>
+            {% if guest_list %}
+                <button type="button" class="btn btn-sm btn-primary btn-icon rounded-pill" onclick="window.print();">
+                    <span class="btn-inner--icon"><i class="far fa-print"></i></span>
+                    <span class="btn-inner--text">Print</span>
+                </button>
+            {% endif %}
+        </div>
+
+        <div class="card-body">
+            {% if guest_list %}
+                <div class="table-responsive">
+                    <table class="table table-hover align-items-center mb-0">
+                        <thead>
+                            <tr>
+                                <th>Guest</th>
+                                <th>Customer ID</th>
+                                <th>Contact</th>
+                                <th>Email</th>
+                                <th>Address</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for guest in guest_list %}
+                                <tr>
+                                    <td>
+                                        <div class="media align-items-center">
+                                            <div class="icon bg-gradient-info text-white rounded-circle icon-shape mr-3">
+                                                <i class="far fa-user"></i>
+                                            </div>
+                                            <div class="media-body">
+                                                <a href="{% url 'customer-detail' guest.customer_id %}" class="name h6 mb-0 text-sm">
+                                                    {{ guest.first_name }} {{ guest.middle_name }} {{ guest.last_name }}
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>{{ guest.customer_id }}</td>
+                                    <td>{{ guest.contact_no }}</td>
+                                    <td>{{ guest.email_address|default:"-" }}</td>
+                                    <td>{{ guest.address }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="text-center py-5">
+                    <span class="d-block display-4 text-muted mb-3"><i class="far fa-user"></i></span>
+                    <h5 class="mb-2">No guests currently checked in</h5>
+                    <p class="text-muted mb-0">Guests will appear here after check-in and before checkout.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
